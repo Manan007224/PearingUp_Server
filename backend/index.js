@@ -11,6 +11,8 @@ var mongoose = require('mongoose');
 //var db = require('./db.js');
 var cookieParser = require('cookie-parser');
 var User = require('./user');
+var mongodb = require("mongodb");
+var ObjectID = mongodb.ObjectID;
 
 app.use(session({
 	secret: 'practice_login_session'
@@ -75,7 +77,7 @@ const hostname = 'localhost';
 const port = process.env.PORT || 5000;
 
 const server = app.listen(port, hostname, () => {
-	mongoose.connect("mongodb://127.0.0.1/login_schema", dbOptions, (err) => {
+	mongoose.connect("mongodb://manan:007224manan@ds153890.mlab.com:53890/manantest", dbOptions, (err) => {
 	    if (err) {
 	      console.log(err);
 	    }
