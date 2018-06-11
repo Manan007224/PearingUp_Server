@@ -30,11 +30,12 @@ require('./config/passport')(passport);
 const hostname = 'localhost';
 const port = process.env.PORT || 5000;
 
-const server = app.listen(port, hostname, () => {
-	mongoose.connect(process.env.MONGODB_URI, dbOptions, (err) => {
-	    if (err) {
-	      console.log(err);
-	    }
-    console.log(`Server running at http://${hostname}:${port}/`);
-  });
+mongoose.connect(process.env.MONGODB_URI, (err) =>{
+	if(err)
+		console.log("Causing error", err);
+	else
+		console.log("Connected Successfully");
+});
+app.listen(port, ()=>{
+	console.log("app is listening at port 5000");
 });

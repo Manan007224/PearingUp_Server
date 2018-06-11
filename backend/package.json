@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-   "engines": {
+  "engines": {
     "node": "8.11.1",
     "npm": ">3.0.0"
   },
@@ -21,10 +21,13 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "flash": "^1.1.0",
-    "mongoose": "^5.1.2",
+    "mongodb": "^3.0.10",
+    "mongoose": "^5.1.4",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "passport-session": "^1.0.2",
+    "request": "^2.87.0",
     "session": "^0.1.0"
   }
 }
