@@ -8,7 +8,8 @@
     "start": "node index.js"
   },
    "engines": {
-    "node": "8.11.1"
+    "node": "8.11.1",
+    "npm": ">3.0.0"
   },
   "author": "Manan Maniyar",
   "license": "ISC",
