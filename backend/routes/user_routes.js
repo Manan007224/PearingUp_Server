@@ -15,6 +15,15 @@ function isLoggedIn(req, res, next) {
 	res.redirect('/');
 }
 
+var find_error = (err) => {
+	if(err.errors) {
+		for(var er in err.errors) {
+			if(err.errors[er].message) return err.errors[er].message;
+		}
+		return 'Unknown server error';
+	}
+}
+
 Usr.get('/', function(req, res){
 	res.status(200).json("Hello there");
 });
@@ -55,4 +64,3 @@ Usr.get('/logout', (req, res) => {
 });
 
 module.exports = Usr;
-
