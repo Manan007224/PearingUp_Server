@@ -18,24 +18,28 @@ module.exports = function(passport) {
 	passport.use('local-signup', new LocalStrategy({
         usernameField : 'email',
         passwordField : 'password',
+        userField: 'username',
         passReqToCallback : true 
     },
 
-    function(req, email, password, done) {
+    function(req, res, email, password, username) {
     	console.log('Reached Here');
-        User.findOne({ 'local.email' :  email }, function(err, user) {
+        User.find({$or: [{'email': email}, {'username': username}]}, function(err, user) {
             if (err)  {
             	console.log(err, '1');
-            	return done(err);
+            	res.status(400).json({err: 'Err with Username or email entering'});
             }
-            if (user) { return done(null, false, {message: 'Message Email Already Taken'});
-            } else {
+            if (user)
+                res.status(400).json({err: 'Email or Username already taken'});
+            else {
             	var newUser = new User();
-                newUser.local.email    = email;
-                newUser.local.password = newUser.generateHash(password);
+                newUser.email = email;
+                newUser.username = username;
+                newUser.password = newUser.generateHash(password);
                 newUser.save(function(err) {
-                    if (err) {console.log(err)}
-                    return done(null, newUser);
+                    if (err) {console.log('There is an err', err)}
+                    console.log('New User');
+                    res.status(200).json({success: 'Successfully created the account'});
                 });
             }
         });
@@ -47,7 +51,7 @@ module.exports = function(passport) {
         	passReqToCallback : true
     		},
     		function(req, email, password, done) { 
-        		User.findOne({ 'local.email' :  email }, function(err, user) {
+        		User.findOne({ 'email' :  email }, function(err, user) {
             		if (err)  return done(err);
             		if (!user)  return done(null, false, {message: 'The User does not exists'}); 
             		if (!user.validPassword(password)) return done(null, false,{message: 'Wrong Password Entered'});
