@@ -37,5 +37,5 @@ mongoose.connect(process.env.MONGODB_URI, (err) =>{
 		console.log("Connected Successfully");
 });
 app.listen(port, ()=>{
-	console.log("app is listening at localhost 5000");
+	console.log("app is listening at localhost port 5000");
 });
