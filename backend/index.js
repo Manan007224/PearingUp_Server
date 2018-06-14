@@ -12,10 +12,6 @@ var User = require('./user');
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
-app.use(session({
-	secret: 'practice_login_session'
-}));
-
 const dbOptions = {};
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
