@@ -30,7 +30,7 @@ require('./config/passport')(passport);
 const hostname = 'localhost';
 const port = process.env.PORT || 5000;
 
-mongoose.connect(process.env.MONGODB_URI, (err) =>{
+mongoose.connect('mongodb://manan:007224Jags@ds153890.mlab.com:53890/manantest', (err) =>{
 	if(err)
 		console.log("Causing error", err);
 	else
