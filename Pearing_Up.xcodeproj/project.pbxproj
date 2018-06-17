@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B5D3A35067BB15365B8A39E /* Pods_Pearing_Up.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80891CEF7889EB75F0E2F1FD /* Pods_Pearing_Up.framework */; };
 		91E774DA20D638740030121E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E774D920D638740030121E /* AppDelegate.swift */; };
 		91E774DC20D638740030121E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E774DB20D638740030121E /* ViewController.swift */; };
 		91E774DF20D638740030121E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 91E774DD20D638740030121E /* Main.storyboard */; };
@@ -15,6 +16,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		62A4F78399698EE9745AD9A0 /* Pods-Pearing_Up.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pearing_Up.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pearing_Up/Pods-Pearing_Up.release.xcconfig"; sourceTree = "<group>"; };
+		80891CEF7889EB75F0E2F1FD /* Pods_Pearing_Up.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pearing_Up.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		91E774D620D638740030121E /* Pearing_Up.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pearing_Up.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		91E774D920D638740030121E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		91E774DB20D638740030121E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +25,7 @@
 		91E774E020D638740030121E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		91E774E320D638740030121E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		91E774E520D638740030121E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ACBE827427E60BA5ED6A8E60 /* Pods-Pearing_Up.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pearing_Up.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pearing_Up/Pods-Pearing_Up.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +33,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B5D3A35067BB15365B8A39E /* Pods_Pearing_Up.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8C16309FC7909EF1A5A0DEA0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				80891CEF7889EB75F0E2F1FD /* Pods_Pearing_Up.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		91E774CD20D638740030121E = {
 			isa = PBXGroup;
 			children = (
 				91E774D820D638740030121E /* Pearing_Up */,
 				91E774D720D638740030121E /* Products */,
+				AC602C4E8558625DF94156B8 /* Pods */,
+				8C16309FC7909EF1A5A0DEA0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,6 +79,15 @@
 			path = Pearing_Up;
 			sourceTree = "<group>";
 		};
+		AC602C4E8558625DF94156B8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				ACBE827427E60BA5ED6A8E60 /* Pods-Pearing_Up.debug.xcconfig */,
+				62A4F78399698EE9745AD9A0 /* Pods-Pearing_Up.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -71,9 +95,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 91E774E820D638740030121E /* Build configuration list for PBXNativeTarget "Pearing_Up" */;
 			buildPhases = (
+				6D46C2DF4B74FFE60C8E27A8 /* [CP] Check Pods Manifest.lock */,
 				91E774D220D638740030121E /* Sources */,
 				91E774D320D638740030121E /* Frameworks */,
 				91E774D420D638740030121E /* Resources */,
+				F85D62E3055DD469BE18E606 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -130,6 +156,49 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6D46C2DF4B74FFE60C8E27A8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Pearing_Up-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F85D62E3055DD469BE18E606 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Pearing_Up/Pods-Pearing_Up-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Pearing_Up/Pods-Pearing_Up-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		91E774D220D638740030121E /* Sources */ = {
@@ -272,6 +341,7 @@
 		};
 		91E774E920D638740030121E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = ACBE827427E60BA5ED6A8E60 /* Pods-Pearing_Up.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -287,6 +357,7 @@
 		};
 		91E774EA20D638740030121E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 62A4F78399698EE9745AD9A0 /* Pods-Pearing_Up.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
