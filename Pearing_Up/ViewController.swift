@@ -14,32 +14,34 @@ class ViewController: UIViewController {
     
     let server_URL = "https://pearingup.herokuapp.com/"
     
+    @IBOutlet weak var register_label: UILabel!
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        getLogin(url: server_URL)
+    }
+    
+    @IBAction func SignupClick(_ sender: Any) {
+        performSegue(withIdentifier: "SignupSegue", sender: self)
+        
+    }
+    
+    @IBAction func LoginClick(_ sender: Any) {
+        performSegue(withIdentifier: "LoginSegue", sender: self)
     }
     
     
-
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
-    func getLogin(url: String){
-        Alamofire.request(url, method: .get).responseJSON {
-            response in
-            if response.result.isSuccess {
-                print("Response Successfull")
-                print("Response Response")
-            }
-            else {
-                print("Error in the request")
-            }
-        }
-    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
