@@ -39,7 +39,7 @@ Usr.post('/login', (req, res)=>{
 		if(err)
 				res.status(400).json({errCode: 302, err: "Server side error while login"});
 		if(!usr)
-				res.status(409).json({errName: 400, err: "User not found"});
+				res.status(409).json({errCode: 400, err: "User not found"});
 		if(!usr.validPassword(user_pw))
 				res.status(409).json({errCode: 409, err: "Entered Password in incorrect"});
 		else {
