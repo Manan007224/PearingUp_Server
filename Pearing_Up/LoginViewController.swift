@@ -46,12 +46,34 @@ class LoginViewController: UIViewController {
         // Check a valid email id using regular expressions
         
         if(valid_email(emailString: email_holder.text!)){
-            print("Valid Email Address")
             Alamofire.request(url, method: .post, parameters: params).responseJSON{
                 response in
                 if response.result.isSuccess {
                     let temp : JSON = JSON(response.result.value!)
+                    print("Reached Here")
                     print(temp)
+                    
+                    // API DOCUMENTATION
+                    // Success, result: "email_id"
+                    // If the password is wrong, errCode == 409
+                    // If the User is not found, errCode == 400
+                    // If there is any server side error, errCode == 302
+                    
+                    if(temp["errCode"].exists()){
+                        if(temp["errCode"] == 400){
+                            self.displayAlert(message: "User with this email_id is not found. Please enter the credentials again")
+                        }
+                        
+                        else if(temp["errCode"] == 409){
+                            self.displayAlert(message: "The entered password is incorrect. Please enter the password again")
+                        }
+                        
+                        else if(temp["errCode"] == 302){
+                            self.displayAlert(message: "Server-Side error. Please contact Manan Maniyar")
+                        }
+                        
+                    }
+                    
                     self.performSegue(withIdentifier: "ProfileSegue", sender: self)
                 }
                 else {
@@ -100,8 +122,3 @@ class LoginViewController: UIViewController {
     }
     
 }
-
-
-
-
-

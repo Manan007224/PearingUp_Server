@@ -49,7 +49,14 @@ class SignUpViewController: UIViewController {
             response in
             if response.result.isSuccess {
                 let temp : JSON = JSON(response.result.value!)
-                print(temp)
+                
+                // This is the case where User Already Exists
+                
+                if(temp["result"] == "GET/SIGNUP"){
+                    self.displayAlert(message: "User Already Exists. Pleas enter a new email ID")
+                    return
+                }
+                
                 self.performSegue(withIdentifier: "SignupSucessSegue", sender: self)
             }
             else {
