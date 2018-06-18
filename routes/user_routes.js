@@ -25,37 +25,41 @@ var find_error = (err) => {
 }
 
 Usr.get('/', function(req, res){
-	res.status(200).json("Hello there");
+	res.status(200).json({result: "Hello there at basic route"});
 });
 
 Usr.get('/login', function(req, res){
-	res.status(200).json('loginmessage');
+	res.status(200).json({result: "GET/LOGIN"});
 });
 
-Usr.post('/login', passport.authenticate('local-login', {
-    successRedirect : '/profile', // redirect to the secure profile section
-    failureRedirect : '/login', // redirect back to the signup page if there is an error
-}));
+Usr.post('/login', (req, res)=>{
+	let user_email = req.body.email;
+	let user_pw = req.body.password;
+	User.findOne({'email': user_email}, (err, usr) =>{
+		if(err)
+				res.status(400).json({errName: "Server side error while login", err: err});
+		if(!usr)
+				res.status(409).json({errName: "User not found", err: "None"});
+		if(!usr.validPassword(user_pw))
+				res.status(409).json({errName: "Entered Passoword in incorrect", err: "None"});
+		let redirect_url = '/profile/' + user_email
+		res.redirect(redirect_url);
+	})
+})
 
 Usr.get('/signup', function(req, res){
 	res.status(200).json({result: 'GET/SIGNUP'});
 });
 
 Usr.post('/signup', passport.authenticate('local-signup', {
-	successRedirect: '/profile',
+	successRedirect: '/',
 	failureRedirect: '/signup',
 }));
 
-Usr.get('/profile', function(req, res){
-	User.find({}, (err, names) =>{
-		if(err) console.log(err);
-		else console.log('Now Displaying the ID', names);
-	})
-	res.json("Hello there");
-});
-
-Usr.get('/profile', isLoggedIn, (req, res) =>{
-	res.status(200).json({result: req.user})
+Usr.get('/profile/:id', (req, res) =>{
+	let _id = req.params.id;
+	console.log("The user to signin is: ", _id);
+	res.status(200).json({result: _id});
 });
 
 Usr.get('/logout', (req, res) => {
