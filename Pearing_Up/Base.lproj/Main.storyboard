@@ -148,6 +148,9 @@
                                 <state key="normal" title="Enter">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="login_click:" destination="mq8-qe-SPb" eventType="touchUpInside" id="wUf-IN-aMj"/>
+                                </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Email" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xz9-8Q-dfX">
                                 <rect key="frame" x="59" y="354" width="257" height="34"/>
@@ -170,6 +173,9 @@
                         <viewLayoutGuide key="safeArea" id="L3P-wX-QEb"/>
                     </view>
                     <connections>
+                        <outlet property="email_holder" destination="Xz9-8Q-dfX" id="uKS-5w-ZPN"/>
+                        <outlet property="login_tet" destination="rFn-5l-ZcJ" id="T6C-B5-UN6"/>
+                        <outlet property="pwd_holder" destination="L47-bz-DS7" id="vf2-fu-oeJ"/>
                         <segue destination="T7x-ly-ZLS" kind="show" identifier="ProfileSegue" id="3ax-zZ-eI7"/>
                     </connections>
                 </viewController>
