@@ -25,8 +25,23 @@ class SignUpViewController: UIViewController {
     
     
     @IBAction func signup_click(_ sender: Any) {
-        let signup_params: [String:String] = ["email": email_holder.text!, "password": pwd_holder.text!]
-        signup(url: signup_url, params: signup_params)
+        
+        if(email_holder.text == "" || pwd_holder.text == ""){
+            print("All fields required")
+            displayAlert(message: "Email or Password is Empty. Please fill in again")
+            return
+        }
+        
+        if(valid_email(emailString: email_holder.text!)){
+            let signup_params: [String:String] = ["email": email_holder.text!, "password": pwd_holder.text!]
+            signup(url: signup_url, params: signup_params)
+        }
+        
+        else{
+            print("There is some error")
+            displayAlert(message: "EmailId or Password is invalid. Please fill in again")
+            return
+        }
     }
     
     func signup(url: String, params: [String:String]){
@@ -43,16 +58,38 @@ class SignUpViewController: UIViewController {
         }
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    
+    func valid_email(emailString: String) -> Bool {
+        
+        let email_regex = "[A-Z0-9a-z.-_]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,3}"
+        
+        do {
+            let regex = try NSRegularExpression(pattern: email_regex)
+            let rnstring = emailString as NSString
+            let results = regex.matches(in: emailString, range: NSRange(location: 0, length: rnstring.length))
+            
+            if results.count == 0 {
+                return false
+            }
+        } catch let error as NSError {
+            print("invalid regex: \(error.localizedDescription)")
+            return false
+        }
+        
+        return true
     }
-    */
-
+    
+    func displayAlert(message: String){
+        
+        let alert_toDisplay = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
+        
+        alert_toDisplay.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action in
+            self.email_holder.text = "email"
+            self.pwd_holder.text = "password"
+        }))
+        self.present(alert_toDisplay, animated: true, completion: nil)
+    }
+    
 }
 
 
