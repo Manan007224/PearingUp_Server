@@ -37,15 +37,17 @@ Usr.post('/login', (req, res)=>{
 	let user_pw = req.body.password;
 	User.findOne({'email': user_email}, (err, usr) =>{
 		if(err)
-				res.status(400).json({errName: "Server side error while login", err: err});
+				res.status(400).json({errCode: 302, err: "Server side error while login"});
 		if(!usr)
-				res.status(409).json({errName: "User not found", err: "None"});
+				res.status(409).json({errName: 400, err: "User not found"});
 		if(!usr.validPassword(user_pw))
-				res.status(409).json({errName: "Entered Passoword in incorrect", err: "None"});
-		let redirect_url = '/profile/' + user_email
-		res.redirect(redirect_url);
-	})
-})
+				res.status(409).json({errCode: 409, err: "Entered Password in incorrect"});
+		else {
+			let redirect_url = '/profile/' + user_email
+			res.redirect(redirect_url);
+		}
+	});
+});
 
 Usr.get('/signup', function(req, res){
 	res.status(200).json({result: 'GET/SIGNUP'});
