@@ -10,6 +10,7 @@ var userSchema = schema({
 	radius: String,
 	followers: [String],
 	following: [String],
+	requested: [String],
 	picked: [String],
 	posted: [String]
 });
