@@ -10,7 +10,7 @@ var mongoose = require('mongoose');
 var Usr = express.Router();
 var User = require('../user');
 var Tree = require('../tree.js');
-var {errWrap, reqLog, end} = require('../config/basic.js');
+var {errWrap, reqLog, end, assert_catch} = require('../config/basic.js');
 var assert = require('assert');
 var _ = require('lodash');
 var fs = require('fs');
@@ -84,22 +84,18 @@ Usr.get('/logout', (req, res) => {
 Usr.get('/sentRequest/:sender/:receiver', async(req, res)=>{
 	try {
 		let {sender, receiver} = req.params;
-		console.log("Sender is: ", sender, "Receiver is: ", receiver);
 		let snd = await User.findOne({'email': sender});
 		let rcv = await User.findOne({'email': receiver});
-		console.log("Snd: ", snd, "Rcv: ", rcv);
-		assert.notStrictEqual(snd, null, 'sender email is not valid');
-		assert.notStrictEqual(rcv, null, 'receiver email is not valid');
-		assert.notStrictEqual(snd, rcv, 'invalid request');
+		assert_catch('notStrictEqual', snd, null, 'sender email is not valid', res, 409);
+		assert_catch('notStrictEqual', rcv, null, 'receiver email is not valid', res, 409);
+		assert_catch('notStrictEqual', snd, rcv, 'Invalid Request', res, 409);
 		let id_found = '...';
 		let idx = _.find(rcv.requested, (ch) => {
 			return ch == id_found;
 		});
-		console.log("Index: ", idx);
-		assert.notDeepStrictEqual(idx, 'undefined', 'Already Requested to the User');
-		console.log('RCV EMAIL:', rcv.email);
+		assert_catch('notDeepStrictEqual', idx, undefined, 'Already Requested to the User', res, 409);
 		await User.update({'email': req.params.receiver}, {$push: {'requested': req.params.sender}});
-		res.status(200).json({message: 'Sent Request'});
+		end(res, 'Succesfully Completed');
 	}
 	catch(err) {
 		reqLog(err);
@@ -118,16 +114,16 @@ Usr.get('/AcceptRequest/:sender/:receiver', async(req, res)=>{
 		console.log("Sender is: ", sender, "Receiver is: ", receiver);
 		let snd = await User.findOne({'email': sender});
 		let rcv = await User.findOne({'email': receiver});
-		assert.notStrictEqual(snd, rcv, 'invalid request');
+		assert_catch('notStrictEqual', snd, rcv, 'Invalid Request', res, 409);
 		let id_found = '...';
 		let idx = _.find(snd.followers, (ch) => {
 			return ch == id_found;
 		});
-		assert.notDeepStrictEqual(idx, 'undefined', 'Already Accepted Requested');
+		assert_catch('notDeepStrictEqual', idx, undefined, 'Already Requested to the User', res, 409);
 		await User.update({'email': req.params.sender}, {$push: {'followers': req.params.receiver}});
 		await User.update({'email': req.params.sender}, {$pull: {'following': req.params.receiver}});
 		await User.update({'email': req.params.receiver}, {$push: {'following': req.params.sender}});
-		res.status(409).json({message: 'Accepted Request'});		
+		end(res, 'Succesfully Completed');		
 	}
 	catch(err){
 		reqLog(err);
@@ -136,40 +132,34 @@ Usr.get('/AcceptRequest/:sender/:receiver', async(req, res)=>{
 	}
 });
 
-Usr.post('/:sender/saveTree', (req, res) => {
-	try {
-		let _id = await User.findOne({'email': req.params.sender})._id;
-		var new_tree = new Tree;
-		assert.notStrictEqual(_id, null, 'ID not found');		
-		new_tree.owner = _id;
-		await new_tree.save({});
-	}
-	catch(err) {
-		reqLog(err);
-		console.warn(err);
-		res.status(409).json({message: 'error in saving the tree'});
-	}
-})
+// Usr.post('/:sender/postImage', (req, res) => {
+// 	try {
+// 		let _id = await User.findOne({'email': req.params.sender})._id;
+// 		let filePath = req.body.filePath;	
+// 		var new_tree = new Tree;
+// 		assert.notStrictEqual(_id, null, 'ID not found');
+// 		assert.notStrictEqual(filePath, null, 'No FilePath Provided');	
+// 		new_tree.owner = _id;	
+// 		new_tree.image = {data: fs.readFileSync(filePath), contentType: 'image/PNG'};
+// 		await Tree.save({});
+// 	}
+// 	catch(err){
+// 		reqLog(err);
+// 		console.log(err);
+// 		res.status(409).json({message: 'Error in posting the Image'});
+// 	}
+// });
 
-Usr.post('/:sender/postImage', (req, res) => {
-	try {
-		let {snd} = req.params;
-		let filePath = req.body.filePath;
-		let _id = await User.findOne({'email': snd})._id;
-		assert.notStrictEqual(_id, null, 'ID not found');	
-		let treeBelongs = await Tree.findOne({'owner': _id});
-		assert.notStrictEqual(treeBelongs, null, 'No Tree found related to this user');
-		let img = {data: fs.readFileSync(filePath), contentType: 'image/PNG'};
-		
-		assert.notStrictEqual(new_tree.owner, null, 'There is no owner defined for this particular tree');
-		await Tree.update({owner: new_tree.owner})
-	}
-	catch(err){
-		reqLog(err);
-		console.log(err);
-		res.status(409).json({message: 'Error in posting the Image'});
-	}
-})
+// Usr.get('/:sender/getImage', (req, res) => {
+// 	try {
+
+// 	}
+// 	catch(err) {
+// 		reqLog(err);
+// 		console.warn(err);
+// 		res.status(302).json({message: 'Error in getting the Image'});
+// 	}
+// });
 
 Usr.get('/allUsers', (req, res)=>{
 	User.find({}, (err, usrs) => {

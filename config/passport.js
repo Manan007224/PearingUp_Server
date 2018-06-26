@@ -61,6 +61,6 @@ module.exports = function(passport) {
             		if (!user.validPassword(password)) return done(null, false,{message: 'Wrong Password Entered'});
             		return done(null, user);
         });
-
+        
     }));
 };

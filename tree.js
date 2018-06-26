@@ -1,11 +1,13 @@
-import { Schema as _Schema } from "mongoose";
-var Schema = _Schema();
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+var imgSchema = new Schema({
+    img: {data: Buffer, contentType: String, title: String}
+});
 
 var treeSchema = Schema({
-	username: String,
-	Id: String,
-	Location: String,
-	Expected_Yield: String,
-	fruit: String,
-	pickers: [String]
+	owner: mongoose.Schema.Types.ObjectId,
+	image: imgSchema
 });
+
+module.exports = mongoose.model('Tree', treeSchema);
