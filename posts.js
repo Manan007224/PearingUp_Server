@@ -3,13 +3,21 @@ var Schema = mongoose.Schema;
 
 var infoSchema = Schema({
     Expected_Yield: String,
-    fruits: [String],
+    fruits: String,
+});
+
+var imgSchema = Schema({
+    img: Buffer,
+    contentType: String,
 });
 
 var postSchema = Schema({
-    postedBy: mongoose.Schema.Types.ObjectId,
+    owner: String,
     title: String,
     info: infoSchema,
-    images: [mongoose.Schema.Types.ObjectId],
-    pickers: [String]
+    images : [imgSchema],
+    pickers: [String],
+    additional_msg: String
 });
+
+module.exports = mongoose.model('Post', postSchema);

@@ -6,7 +6,10 @@ var imgSchema = new Schema({
 });
 
 var treeSchema = Schema({
-	owner: mongoose.Schema.Types.ObjectId,
+	owner: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User'
+	},
 	image: imgSchema
 });
 

@@ -10,24 +10,11 @@ var mongoose = require('mongoose');
 var Usr = express.Router();
 var User = require('../user');
 var Tree = require('../tree.js');
+var Posts = require('../posts.js');
 var {errWrap, reqLog, end, assert_catch} = require('../config/basic.js');
 var assert = require('assert');
 var _ = require('lodash');
 var fs = require('fs');
-
-function isLoggedIn(req, res, next) {
-	if(req.isAuthenticated()) return next();
-	res.redirect('/');
-}
-
-var find_error = (err) => {
-	if(err.errors) {
-		for(var er in err.errors) {
-			if(err.errors[er].message) return err.errors[er].message;
-		}
-		return 'Unknown server error';
-	}
-}
 
 Usr.get('/', function(req, res){
 	res.status(200).json({result: "Hello there at basic route"});
@@ -58,10 +45,29 @@ Usr.get('/signup', function(req, res){
 	res.status(200).json({result: 'GET/SIGNUP'});
 });
 
-Usr.post('/signup', passport.authenticate('local-signup', {
-	successRedirect: '/',
-	failureRedirect: '/signup',
-}));
+Usr.post('/signup', async(req, res) => {
+	try {
+		let {username, email, password} = req.body;
+		let usnm = await User.findOne({'username': username});
+		let eml = await User.findOne({'email': email});
+		assert_catch('notDeepStrictEqual', usnm, null, 'Username Already Exists', res, 409);
+		assert_catch('notDeepStrictEqual', eml, null, 'Username Already Exists', res, 409);
+		let nUser = new User();
+		nUser.username = username; nUser.email = email;
+		nUser.password = nUser.generateHash(password);
+		await nUser.save({});
+		res.redirect('/');
+	}
+	catch(err) {
+		reqLog(err);
+		console.log(err);
+		res.status(409).status({message: 'Signup Failed'});
+	}
+});
+
+	// successRedirect: '/',
+	// failureRedirect: '/signup',
+
 
 Usr.get('/profile/:id', (req, res) =>{
 	console.log("Req.query = ", req.query);
@@ -132,39 +138,83 @@ Usr.get('/AcceptRequest/:sender/:receiver', async(req, res)=>{
 	}
 });
 
-// Usr.post('/:sender/postImage', (req, res) => {
-// 	try {
-// 		let _id = await User.findOne({'email': req.params.sender})._id;
-// 		let filePath = req.body.filePath;	
-// 		var new_tree = new Tree;
-// 		assert.notStrictEqual(_id, null, 'ID not found');
-// 		assert.notStrictEqual(filePath, null, 'No FilePath Provided');	
-// 		new_tree.owner = _id;	
-// 		new_tree.image = {data: fs.readFileSync(filePath), contentType: 'image/PNG'};
-// 		await Tree.save({});
-// 	}
-// 	catch(err){
-// 		reqLog(err);
-// 		console.log(err);
-// 		res.status(409).json({message: 'Error in posting the Image'});
-// 	}
-// });
+// POST - /:sender/createPost - Post a new Post with Multiple Images
+// :sender is the Username
+// Sample JSON Data Would be :
+//  	{ 
+//			pickers: [],
+//   		_id: 5b33a662c52e3469504b3973,
+//   		images:
+//    			[ 
+//					{	
+//						_id: 5b33a662c52e3469504b3976,
+//        				img: [Object],
+//        				contentType: 'image/PNG'
+//					},
+//      			{ 					
+//						_id: 5b33a662c52e3469504b3975,
+//        				img: [Object],
+//        				contentType: 'image/PNG' 
+//					} 
+//				],
+//   		owner: 'manan_test',
+//   		info:
+//    		{ 
+//				_id: 5b33a662c52e3469504b3974,
+//      		Expected_Yield: '200',
+//      		fruits: 'Apples' 
+//			},
+//   		additional_msg: 'None' 
+//		}
 
-// Usr.get('/:sender/getImage', (req, res) => {
-// 	try {
 
-// 	}
-// 	catch(err) {
-// 		reqLog(err);
-// 		console.warn(err);
-// 		res.status(302).json({message: 'Error in getting the Image'});
-// 	}
-// });
+Usr.post('/:sender/createPost', async(req, res) => {
+	try {
+		let owner = await User.findOne({'username': req.params.sender});
+		var new_tree = new Posts();
+		assert_catch('notStrictEqual', owner, null, 'Owner Not Found', res, 409);
+		new_tree.owner = owner.username;
+		new_tree.info = req.body.info;
+		new_tree.additional_msg = req.body.additional_msg;
+		var tImages = [];
+		if(req.body.filePath.length > 0) {
+			for(let i=0; i<req.body.filePath.length; i++) {
+				let tImage = {img: await fs.readFileSync(req.body.filePath[i]), contentType: 'image/PNG'}
+				tImages.push(tImage);
+			}
+		}
+		new_tree.images = tImages;
+		console.log(new_tree);
+		await new_tree.save({});
+		end(res, 'Succesfully Saved the Image');
+	}
+	catch(err){
+		reqLog(err);
+		console.log(err);
+		res.status(409).json({message: 'Error in posting the Image'});
+	}
+});
+
+
 
 Usr.get('/allUsers', (req, res)=>{
 	User.find({}, (err, usrs) => {
 		if(err) console.log(err);
 		else res.status(200).json({'Users': usrs});
+	});
+});
+
+Usr.get('/allPosts', (req, res) => {
+	Posts.find({}, (err, pst) => {
+		if(err) console.log(err);
+		else res.status(200).json({'Posts': pst});
+	});
+});
+
+Usr.delete('/allPosts', (req, res) =>{
+	Posts.remove({}, (err, pst) =>{
+		if(err) console.log(err);
+		else res.status(200).json({'result': 'Succesfully Completed'});
 	});
 });
 

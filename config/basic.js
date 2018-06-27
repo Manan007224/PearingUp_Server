@@ -22,9 +22,24 @@ const assert_catch = (type, check1, check2, message, res, st) => {
         if(check1 === check2) res.status(st).json({message: message});
     }
     if(type === 'notDeepStrictEqual'){
-        if(check1 !== check2) res.status(st).json({message: message});
+        if(check1 != check2) res.status(st).json({message: message});
     }
 }
+
+function isLoggedIn(req, res, next) {
+	if(req.isAuthenticated()) return next();
+	res.redirect('/');
+}
+
+var find_error = (err) => {
+	if(err.errors) {
+		for(var er in err.errors) {
+			if(err.errors[er].message) return err.errors[er].message;
+		}
+		return 'Unknown server error';
+	}
+}
+
 
 module.exports.errWrap = errWrap;
 module.exports.reqLog = reqLog;
