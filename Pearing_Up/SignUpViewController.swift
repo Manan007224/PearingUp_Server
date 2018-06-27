@@ -16,7 +16,7 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var signup_label: UILabel!
     @IBOutlet weak var pwd_holder: UITextField!
     @IBOutlet weak var email_holder: UITextField!
-    
+    @IBOutlet weak var username_holder: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -33,7 +33,7 @@ class SignUpViewController: UIViewController {
         }
         
         if(valid_email(emailString: email_holder.text!)){
-            let signup_params: [String:String] = ["email": email_holder.text!, "password": pwd_holder.text!]
+            let signup_params: [String:String] = ["username": username_holder.text!, "email": email_holder.text!, "password": pwd_holder.text!]
             signup(url: signup_url, params: signup_params)
         }
         
@@ -49,11 +49,11 @@ class SignUpViewController: UIViewController {
             response in
             if response.result.isSuccess {
                 let temp : JSON = JSON(response.result.value!)
-                
+                print(temp)
                 // This is the case where User Already Exists
                 
-                if(temp["result"] == "GET/SIGNUP"){
-                    self.displayAlert(message: "User Already Exists. Pleas enter a new email ID")
+                if(temp["code"] == 302 || temp["code"] == 400 || temp["code"] == 409){
+                    self.displayAlert(message: String(describing: temp["result"]))
                     return
                 }
                 
@@ -98,18 +98,3 @@ class SignUpViewController: UIViewController {
     }
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
