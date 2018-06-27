@@ -90,17 +90,17 @@ Usr.get('/logout', (req, res) => {
 Usr.get('/sentRequest/:sender/:receiver', async(req, res)=>{
 	try {
 		let {sender, receiver} = req.params;
-		let snd = await User.findOne({'email': sender});
-		let rcv = await User.findOne({'email': receiver});
-		assert_catch('notStrictEqual', snd, null, 'sender email is not valid', res, 409);
-		assert_catch('notStrictEqual', rcv, null, 'receiver email is not valid', res, 409);
+		let snd = await User.findOne({'username': sender});
+		let rcv = await User.findOne({'username': receiver});
+		assert_catch('notStrictEqual', snd, null, 'sender username is not valid', res, 409);
+		assert_catch('notStrictEqual', rcv, null, 'receiver username is not valid', res, 409);
 		assert_catch('notStrictEqual', snd, rcv, 'Invalid Request', res, 409);
 		let id_found = '...';
 		let idx = _.find(rcv.requested, (ch) => {
 			return ch == id_found;
 		});
 		assert_catch('notDeepStrictEqual', idx, undefined, 'Already Requested to the User', res, 409);
-		await User.update({'email': req.params.receiver}, {$push: {'requested': req.params.sender}});
+		await User.update({'username': req.params.receiver}, {$push: {'requested': req.params.sender}});
 		end(res, 'Succesfully Completed');
 	}
 	catch(err) {
@@ -118,17 +118,17 @@ Usr.get('/AcceptRequest/:sender/:receiver', async(req, res)=>{
 	try{
 		let {sender, receiver} = req.params;
 		console.log("Sender is: ", sender, "Receiver is: ", receiver);
-		let snd = await User.findOne({'email': sender});
-		let rcv = await User.findOne({'email': receiver});
+		let snd = await User.findOne({'username': sender});
+		let rcv = await User.findOne({'username': receiver});
 		assert_catch('notStrictEqual', snd, rcv, 'Invalid Request', res, 409);
 		let id_found = '...';
 		let idx = _.find(snd.followers, (ch) => {
 			return ch == id_found;
 		});
 		assert_catch('notDeepStrictEqual', idx, undefined, 'Already Requested to the User', res, 409);
-		await User.update({'email': req.params.sender}, {$push: {'followers': req.params.receiver}});
-		await User.update({'email': req.params.sender}, {$pull: {'following': req.params.receiver}});
-		await User.update({'email': req.params.receiver}, {$push: {'following': req.params.sender}});
+		await User.update({'username': req.params.sender}, {$push: {'followers': req.params.receiver}});
+		await User.update({'username': req.params.sender}, {$pull: {'following': req.params.receiver}});
+		await User.update({'username': req.params.receiver}, {$push: {'following': req.params.sender}});
 		end(res, 'Succesfully Completed');		
 	}
 	catch(err){
@@ -213,6 +213,13 @@ Usr.get('/allPosts', (req, res) => {
 
 Usr.delete('/allPosts', (req, res) =>{
 	Posts.remove({}, (err, pst) =>{
+		if(err) console.log(err);
+		else res.status(200).json({'result': 'Succesfully Completed'});
+	});
+});
+
+Usr.delete('/allUsers', (req, res) =>{
+	User.remove({}, (err, pst) =>{
 		if(err) console.log(err);
 		else res.status(200).json({'result': 'Succesfully Completed'});
 	});
