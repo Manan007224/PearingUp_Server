@@ -17,11 +17,11 @@ var _ = require('lodash');
 var fs = require('fs');
 
 Usr.get('/', function(req, res){
-	res.status(200).json({result: "Hello there at basic route"});
+	res.status(200).json({code: 200, result: "Succesfully Completed"});
 });
 
 Usr.get('/login', function(req, res){
-	res.status(200).json({result: "GET/LOGIN"});
+	res.status(200).json({code: 200, result: "Succesfully Completed"});
 });
 
 Usr.post('/login', (req, res)=>{
@@ -29,11 +29,11 @@ Usr.post('/login', (req, res)=>{
 	let user_pw = req.body.password;
 	User.findOne({'email': user_email}, (err, usr) =>{
 		if(err)
-				res.status(400).json({errCode: 302, err: "Server side error while login or User not found"});
+				res.status(400).json({code: 302, result: "Server side error while login or User not found"});
 		else if(!usr)
-				res.status(400).json({errCode: 400, err: "User is not found"})
+				res.status(400).json({code: 400, result: "User is not found"})
 		else if(!usr.validPassword(user_pw))
-				{console.log("Password is: ",user_pw); res.status(409).json({errCode: 409, err: "Entered Password in incorrect"});}
+				{console.log("Password is: ",user_pw); res.status(409).json({code: 409, result: "Entered Password in incorrect"});}
 		else {
 			let redirect_url = '/profile/' + user_email
 			res.redirect(redirect_url);
@@ -42,7 +42,7 @@ Usr.post('/login', (req, res)=>{
 });
 
 Usr.get('/signup', function(req, res){
-	res.status(200).json({result: 'GET/SIGNUP'});
+	res.status(200).json({code: 200, result: 'Succesfully Completed'});
 });
 
 Usr.post('/signup', async(req, res) => {
@@ -61,19 +61,15 @@ Usr.post('/signup', async(req, res) => {
 	catch(err) {
 		reqLog(err);
 		console.log(err);
-		res.status(409).status({message: 'Signup Failed'});
+		res.status(409).status({code: 409, result: 'server-side error'});
 	}
 });
-
-	// successRedirect: '/',
-	// failureRedirect: '/signup',
-
 
 Usr.get('/profile/:id', (req, res) =>{
 	console.log("Req.query = ", req.query);
 	let _id = req.params.id;
 	console.log("The user to signin is: ", _id);
-	res.status(200).json({result: _id});
+	res.status(200).json({code: 200, result: _id});
 });
 
 
@@ -106,7 +102,7 @@ Usr.get('/sentRequest/:sender/:receiver', async(req, res)=>{
 	catch(err) {
 		reqLog(err);
 		console.log(err);
-		res.status(409).json({message: 'error in the route'});
+		res.status(409).json({code: 409, result: 'server-side error'});
 	}
 });
 
@@ -134,7 +130,7 @@ Usr.get('/AcceptRequest/:sender/:receiver', async(req, res)=>{
 	catch(err){
 		reqLog(err);
 		console.log(err);
-		res.status(409).json({message: 'error in the route'});
+		res.status(409).json({code: 409, result: 'server-side error'});
 	}
 });
 
@@ -186,12 +182,12 @@ Usr.post('/:sender/createPost', async(req, res) => {
 		new_tree.images = tImages;
 		console.log(new_tree);
 		await new_tree.save({});
-		end(res, 'Succesfully Saved the Image');
+		end(res, 'Succesfully Completed');
 	}
 	catch(err){
 		reqLog(err);
 		console.log(err);
-		res.status(409).json({message: 'Error in posting the Image'});
+		res.status(409).json({code: 409, result: 'server-side error'});
 	}
 });
 
@@ -200,28 +196,28 @@ Usr.post('/:sender/createPost', async(req, res) => {
 Usr.get('/allUsers', (req, res)=>{
 	User.find({}, (err, usrs) => {
 		if(err) console.log(err);
-		else res.status(200).json({'Users': usrs});
+		else res.status(200).json({code: 200, result: 'Succesfully Completed', Users: usrs});
 	});
 });
 
 Usr.get('/allPosts', (req, res) => {
 	Posts.find({}, (err, pst) => {
 		if(err) console.log(err);
-		else res.status(200).json({'Posts': pst});
+		else res.status(200).json({code: 200, result: 'Succesfully Completed', Posts: pst});
 	});
 });
 
 Usr.delete('/allPosts', (req, res) =>{
 	Posts.remove({}, (err, pst) =>{
 		if(err) console.log(err);
-		else res.status(200).json({'result': 'Succesfully Completed'});
+		else res.status(200).json({code: 200, result: 'Succesfully Completed'});
 	});
 });
 
 Usr.delete('/allUsers', (req, res) =>{
 	User.remove({}, (err, pst) =>{
 		if(err) console.log(err);
-		else res.status(200).json({'result': 'Succesfully Completed'});
+		else res.status(200).json({code: 200, result: 'Succesfully Completed'});
 	});
 });
 

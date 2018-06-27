@@ -3,7 +3,7 @@ const winston = require('winston');
 const errWrap = (fn) => (...args) => fn(...args).catch(args[2]);
 
 const end = (res, message) => {
-    res.status(200).json({message: message});
+    res.status(200).json({code: 200, result: message});
 }
 
 const reqLog = (req) => {
@@ -19,10 +19,10 @@ const reqLog = (req) => {
 
 const assert_catch = (type, check1, check2, message, res, st) => {
     if(type === 'notStrictEqual'){
-        if(check1 === check2) res.status(st).json({message: message});
+        if(check1 === check2) res.status(st).json({code: st, result: message});
     }
     if(type === 'notDeepStrictEqual'){
-        if(check1 != check2) res.status(st).json({message: message});
+        if(check1 != check2) res.status(st).json({code: st, result: message});
     }
 }
 
