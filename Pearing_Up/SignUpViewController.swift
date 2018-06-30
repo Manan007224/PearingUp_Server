@@ -57,7 +57,9 @@ class SignUpViewController: UIViewController {
                     return
                 }
                 
-                self.performSegue(withIdentifier: "SignupSucessSegue", sender: self)
+                self.performSegue(withIdentifier: "SignupInfo", sender: self)
+//                prepare(for: "signupInfo", sender: <#T##Any?#>)
+               
             }
             else {
                 print("Error Happened")
@@ -65,6 +67,15 @@ class SignUpViewController: UIViewController {
         }
     }
     
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "SignupInfo" {
+            
+            let svc = segue.destination as! SignUpInfoController
+            svc.usnm = username_holder.text!
+        }
+    }
     
     func valid_email(emailString: String) -> Bool {
         

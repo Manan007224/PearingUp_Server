@@ -126,12 +126,68 @@
                         <outlet property="pwd_holder" destination="vYn-b8-0Ux" id="mDN-sf-Ht2"/>
                         <outlet property="signup_label" destination="zm0-YH-a2n" id="0uT-bZ-nGg"/>
                         <outlet property="username_holder" destination="CyA-Vn-aX1" id="fqb-AA-MOh"/>
-                        <segue destination="mq8-qe-SPb" kind="show" identifier="SignupSucessSegue" id="qrJ-iv-qer"/>
+                        <segue destination="OI0-W3-ii4" kind="show" identifier="SignupInfo" id="id3-Q5-TIk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vqb-za-FHf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1110" y="446"/>
+        </scene>
+        <!--Sign Up Info Controller-->
+        <scene sceneID="eb9-8x-qoO">
+            <objects>
+                <viewController id="OI0-W3-ii4" customClass="SignUpInfoController" customModule="Pearing_Up" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Mdq-Bw-IxA">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Name" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jq1-KP-1AG">
+                                <rect key="frame" x="59" y="215" width="257" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.25098040700000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Address" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bqe-fg-O5h">
+                                <rect key="frame" x="59" y="317" width="257" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.25098040700000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="City" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fH3-1v-aND">
+                                <rect key="frame" x="59" y="439" width="257" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.25098040700000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cuQ-pe-N8t">
+                                <rect key="frame" x="164" y="646" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.40000000600000002" green="1" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Enter"/>
+                                <connections>
+                                    <action selector="signupInfo:" destination="OI0-W3-ii4" eventType="touchUpInside" id="1lB-Us-7Bf"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <viewLayoutGuide key="safeArea" id="k51-Np-Lcf"/>
+                    </view>
+                    <connections>
+                        <outlet property="user_address" destination="bqe-fg-O5h" id="YmM-NL-4AZ"/>
+                        <outlet property="user_city" destination="fH3-1v-aND" id="7mY-hy-b8z"/>
+                        <outlet property="user_name" destination="jq1-KP-1AG" id="S7G-Wm-r57"/>
+                        <segue destination="mq8-qe-SPb" kind="show" identifier="SingupToLogin" id="U0U-y2-7XZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Yx0-Bn-FT2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2476" y="855.66502463054189"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="jDz-5a-aAO">
@@ -225,6 +281,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="qrJ-iv-qer"/>
+        <segue reference="U0U-y2-7XZ"/>
     </inferredMetricsTieBreakers>
 </document>
