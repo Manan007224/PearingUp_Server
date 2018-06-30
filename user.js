@@ -14,7 +14,8 @@ var userSchema = schema({
 	following: [String],
 	requested: [String],
 	picked: [String],
-	posted: [String]
+	posted: [String],
+	saved_posts: [String],
 });
 
 //hashes the passoword before it reaches to the database

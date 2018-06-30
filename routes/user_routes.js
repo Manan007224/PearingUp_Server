@@ -200,6 +200,7 @@ Usr.post('/:sender/createPost', async(req, res) => {
 		assert_catch('notStrictEqual', owner, null, 'Owner Not Found', res, 409);
 		new_tree.owner = owner.username;
 		new_tree.info = req.body.info;
+		new_tree.title = req.body.title;
 		new_tree.additional_msg = req.body.additional_msg;
 		// var tImages = [];
 		// let n_image = {image: await fs.readFileSync(req.body.filePath), contentType: 'image/PNG'}
@@ -228,22 +229,26 @@ Usr.post('/:sender/createPost', async(req, res) => {
 //	POST - /:sender/:post_title/addtosavedposts let's a user add a posts to their saved list
 //  post_title is assumed unique
 
-Usr.post('/:sender/:post_title/addtosavedposts', async(req, res) =>{
+Usr.post('/:sender/:post_title/bookmarkpost', async(req, res) =>{
 	try {
 		let user = await User.findOne({username: req.params.sender});
 		let ptitle = await Posts.findOne({title: req.params.post_title});
+		console.log('Title is = ', ptitle.title);
 		if(ptitle !== null) {
-			await User.update({username: req.params.sender}, {$push: {saved_posts: ptitle}});
+			console.log("The saved_posts array = ", user);
+			await User.update({username: req.params.sender}, {$push: {saved_posts: ptitle.title}});
 			res.status(200).json({code: 200, result: 'Succesfully Completed'});
 		}
-		res.status(409).json({ code: 409, result: 'server-side error' });
+		else {
+			res.status(409).json({ code: 409, result: 'server-side error' });
+		}
 	}
 	catch(err) {
 		reqLog(err);
 		console.log(err);
 		res.status(409).json({ code: 409, result: 'server-side error' });
 	}
-})
+});
 
 // GET - /:sender/savedposts returns all the saved posts by a particular user
 // returns an array of saved_posts
@@ -258,15 +263,14 @@ Usr.get('/:sender/savedposts', async (req, res) =>{
 		}
 		if (posts_to_send.length === 0)
 			res.status(409).json({code: 409, result: 'server-side error'});
-		console.log(posts_to_send.length);
-
+		console.log("Posts Length", posts_to_send.length);
 	}
 	catch(err) {
 		reqLog(err);
 		console.log(err);
 		res.status(409).json({code: 409, result: 'server-side error'});
 	}
-})
+});
 
 
 

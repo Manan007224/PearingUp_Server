@@ -21,4 +21,9 @@ var postSchema = Schema({
     location_p: String
 });
 
+
 module.exports = mongoose.model('Post', postSchema);
+
+
+
+
