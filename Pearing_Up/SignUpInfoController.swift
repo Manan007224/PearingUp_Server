@@ -2,7 +2,7 @@
 //  SignUpInfoController.swift
 //  Pearing_Up
 //
-//  Created by Navin Kumar Ravindra on 2018-06-29.
+//  Created by Manan Maniyar on 2018-06-29.
 //  Copyright © 2018 Manan Maniyar. All rights reserved.
 //
 
