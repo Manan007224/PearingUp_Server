@@ -17,7 +17,8 @@ var postSchema = Schema({
     info: infoSchema,
     images : [imgSchema],
     pickers: [String],
-    additional_msg: String
+    additional_msg: String,
+    location_p: String
 });
 
 module.exports = mongoose.model('Post', postSchema);

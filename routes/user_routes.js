@@ -49,14 +49,43 @@ Usr.post('/signup', async(req, res) => {
 	try {
 		let {username, email, password} = req.body;
 		let usnm = await User.findOne({'username': username});
+		console.log('Username = ', usnm);
 		let eml = await User.findOne({'email': email});
+		console.log("emai = ", eml);
 		assert_catch('notDeepStrictEqual', usnm, null, 'Username Already Exists', res, 409);
-		assert_catch('notDeepStrictEqual', eml, null, 'Username Already Exists', res, 409);
+		assert_catch('notDeepStrictEqual', eml, null, 'Email Already Exists', res, 409);
+		console.log('CHECKED ALL THE CONDITIONS');
 		let nUser = new User();
 		nUser.username = username; nUser.email = email;
 		nUser.password = nUser.generateHash(password);
 		await nUser.save({});
+		console.log('SAVED SUCCESFULLY THE NEW USER');
 		res.redirect('/');
+	}
+	catch(err) {
+		reqLog(err);
+		console.log(err);
+		res.status(409).status({code: 409, result: 'server-side error'});
+	}
+});
+
+Usr.post('/:sender/signup_info', async(req, res) =>{
+	try {
+		let {full_name, location, city} = req.body;
+		let usnm = await User.findOne({username: req.params.sender});
+		usnm.full_name = full_name;
+		usnm.location = location;
+		usnm.city = city;
+		console.log('Username found out is: ', usnm);
+		if(usnm == null)
+			res.status(409).json({code: 409, result: 'Username not found'});
+		else {
+			User.findOneAndUpdate({username: req.params.sender}, usnm, {new: true}, (err, usr) => {
+				if(err)
+					res.status(409).json({code: 409, result: 'server-side error'});
+				res.status(409).json({ code: 200, result: 'Succesfully Completed'});
+			});
+		}
 	}
 	catch(err) {
 		reqLog(err);

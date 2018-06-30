@@ -22,7 +22,7 @@ const assert_catch = (type, check1, check2, message, res, st) => {
         if(check1 === check2) res.status(st).json({code: st, result: message});
     }
     if(type === 'notDeepStrictEqual'){
-        if(check1 != check2) res.status(st).json({code: st, result: message});
+        if(check1 != check2) {console.log('RHERE');res.status(st).json({code: st, result: message});}
     }
 }
 
