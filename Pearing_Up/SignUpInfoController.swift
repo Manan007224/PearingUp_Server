@@ -80,30 +80,14 @@ class SignUpInfoController: UIViewController {
         let geoCoder = CLGeocoder()
         geoCoder.geocodeAddressString(addr, completionHandler: {(plc, err) -> Void in
             if(err != nil) {
-                print("Error", err ?? "None")
+                self.displayAlert(message: "Please enter a valid email address")
             }
             if let placemark = plc?.first {
                 let coordinates : CLLocationCoordinate2D = placemark.location!.coordinate
                 print("Lat: \(coordinates.latitude) -- Long: \(coordinates.longitude)")
+                
             }
         })
     }
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
