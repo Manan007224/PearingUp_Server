@@ -2,34 +2,34 @@
 //  SavedPostsController.swift
 //  Pearing_Up
 //
-//  Created by Navin Kumar Ravindra on 2018-06-30.
+//  Created by Manan Maniyar on 2018-06-30.
 //  Copyright © 2018 Manan Maniyar. All rights reserved.
 //
 
 import UIKit
 
-class SavedPostsController: UIViewController {
-
+class SavedPostsController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+    
+    let tArray = ["A", "B", "C", "D", "E"]
+    let tImage = [UIImage(named: "tree"), UIImage(named: "tree1"), UIImage(named: "tree2"), UIImage(named: "tree2"), UIImage(named: "tree")]
+    let tDescription = ["A", "B", "C", "D", "E"]
+    let tFruits = ["Apples", "Bananas", "Kiwi", "Oranges", "Pineapple"]
+    let tCity = ["Vancouver", "Burnaby", "Surrey", "Coquitlam", "Richmond"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return tArray.count
+
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
 }

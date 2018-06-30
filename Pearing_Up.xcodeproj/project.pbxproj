@@ -10,6 +10,7 @@
 		5B5D3A35067BB15365B8A39E /* Pods_Pearing_Up.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80891CEF7889EB75F0E2F1FD /* Pods_Pearing_Up.framework */; };
 		9164945C20E7507C00F5467D /* SignUpInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9164945B20E7507C00F5467D /* SignUpInfoController.swift */; };
 		9164946020E7A60400F5467D /* SavedPostsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9164945F20E7A60400F5467D /* SavedPostsController.swift */; };
+		9164946220E7B18B00F5467D /* SavedPosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9164946120E7B18B00F5467D /* SavedPosts.swift */; };
 		916EA22320D7B6D900C1085D /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916EA22220D7B6D900C1085D /* LoginViewController.swift */; };
 		916EA22520D7B71300C1085D /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916EA22420D7B71300C1085D /* SignUpViewController.swift */; };
 		916EA22720D7B75100C1085D /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916EA22620D7B75100C1085D /* ProfileViewController.swift */; };
@@ -25,6 +26,7 @@
 		80891CEF7889EB75F0E2F1FD /* Pods_Pearing_Up.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pearing_Up.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9164945B20E7507C00F5467D /* SignUpInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpInfoController.swift; sourceTree = "<group>"; };
 		9164945F20E7A60400F5467D /* SavedPostsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedPostsController.swift; sourceTree = "<group>"; };
+		9164946120E7B18B00F5467D /* SavedPosts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedPosts.swift; sourceTree = "<group>"; };
 		916EA22220D7B6D900C1085D /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		916EA22420D7B71300C1085D /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		916EA22620D7B75100C1085D /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 				91E774E220D638740030121E /* LaunchScreen.storyboard */,
 				91E774E520D638740030121E /* Info.plist */,
 				9164945F20E7A60400F5467D /* SavedPostsController.swift */,
+				9164946120E7B18B00F5467D /* SavedPosts.swift */,
 			);
 			path = Pearing_Up;
 			sourceTree = "<group>";
@@ -227,6 +230,7 @@
 				91E774DA20D638740030121E /* AppDelegate.swift in Sources */,
 				9164945C20E7507C00F5467D /* SignUpInfoController.swift in Sources */,
 				9164946020E7A60400F5467D /* SavedPostsController.swift in Sources */,
+				9164946220E7B18B00F5467D /* SavedPosts.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
