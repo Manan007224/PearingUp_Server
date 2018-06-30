@@ -4,9 +4,11 @@ var schema = mongoose.Schema;
 
 var userSchema = schema({
 	username: String,
+	full_name: String,
 	email: String,
 	password: String,
 	location: String,
+	city: String,
 	radius: String,
 	followers: [String],
 	following: [String],

@@ -15,7 +15,7 @@ var postSchema = Schema({
     owner: String,
     title: String,
     info: infoSchema,
-    images : [imgSchema],
+    image : imgSchema,
     pickers: [String],
     additional_msg: String,
     location_p: String

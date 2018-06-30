@@ -201,14 +201,19 @@ Usr.post('/:sender/createPost', async(req, res) => {
 		new_tree.owner = owner.username;
 		new_tree.info = req.body.info;
 		new_tree.additional_msg = req.body.additional_msg;
-		var tImages = [];
-		if(req.body.filePath.length > 0) {
-			for(let i=0; i<req.body.filePath.length; i++) {
-				let tImage = {img: await fs.readFileSync(req.body.filePath[i]), contentType: 'image/PNG'}
-				tImages.push(tImage);
-			}
-		}
-		new_tree.images = tImages;
+		// var tImages = [];
+		// let n_image = {image: await fs.readFileSync(req.body.filePath), contentType: 'image/PNG'}
+		// if(req.body.filePath.length > 0) {
+		// 	for(let i=0; i<req.body.filePath.length; i++) {
+		// 		let tImage = {img: await fs.readFileSync(req.body.filePath[i]), contentType: 'image/PNG'}
+		// 		tImages.push(tImage);
+		// 	}
+		// }
+		// new_tree.images = tImages;
+		let bf = await fs.readFileSync('img_text.txt')
+		console.log("BF", bf);
+		let t_image = {img: await fs.readFileSync('img_text.txt'), contentType: 'image/PNG'}
+		new_tree.image = t_image;
 		console.log(new_tree);
 		await new_tree.save({});
 		end(res, 'Succesfully Completed');
@@ -219,6 +224,49 @@ Usr.post('/:sender/createPost', async(req, res) => {
 		res.status(409).json({code: 409, result: 'server-side error'});
 	}
 });
+
+//	POST - /:sender/:post_title/addtosavedposts let's a user add a posts to their saved list
+//  post_title is assumed unique
+
+Usr.post('/:sender/:post_title/addtosavedposts', async(req, res) =>{
+	try {
+		let user = await User.findOne({username: req.params.sender});
+		let ptitle = await Posts.findOne({title: req.params.post_title});
+		if(ptitle !== null) {
+			await User.update({username: req.params.sender}, {$push: {saved_posts: ptitle}});
+			res.status(200).json({code: 200, result: 'Succesfully Completed'});
+		}
+		res.status(409).json({ code: 409, result: 'server-side error' });
+	}
+	catch(err) {
+		reqLog(err);
+		console.log(err);
+		res.status(409).json({ code: 409, result: 'server-side error' });
+	}
+})
+
+// GET - /:sender/savedposts returns all the saved posts by a particular user
+// returns an array of saved_posts
+
+Usr.get('/:sender/savedposts', async (req, res) =>{
+	try {
+		let user = await User.findOne({username: req.params.id});
+		let posts_to_send = [];
+		for(let idx=0; idx<user.saved_posts.length; idx++) {
+			let temp_post = await Posts.findOne({title: user.saved_posts[idx].title});
+			posts_to_send.push(temp_post);
+		}
+		if (posts_to_send.length === 0)
+			res.status(409).json({code: 409, result: 'server-side error'});
+		console.log(posts_to_send.length);
+
+	}
+	catch(err) {
+		reqLog(err);
+		console.log(err);
+		res.status(409).json({code: 409, result: 'server-side error'});
+	}
+})
 
 
 
