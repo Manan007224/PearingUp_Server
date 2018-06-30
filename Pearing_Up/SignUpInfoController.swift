@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import CoreLocation
 import SwiftyJSON
 
 class SignUpInfoController: UIViewController {
@@ -33,6 +34,7 @@ class SignUpInfoController: UIViewController {
         @IBAction func signupInfo(_ sender: Any) {
             let info_params : [String:String] = ["full_name": user_name.text!, "location": user_address.text!, "city": user_city.text!]
             let signup_info_url : URL = URL(string: "https://pearingup.herokuapp.com/\(usnm)/signup_info")!
+            check_location(addr: user_address.text!)
             print(signup_info_url)
             signup_info(url: signup_info_url, params: info_params)
     }
@@ -72,6 +74,21 @@ class SignUpInfoController: UIViewController {
         }))
         self.present(alert_toDisplay, animated: true, completion: nil)
     }
+    
+    
+    func check_location(addr: String){
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(addr, completionHandler: {(plc, err) -> Void in
+            if(err != nil) {
+                print("Error", err ?? "None")
+            }
+            if let placemark = plc?.first {
+                let coordinates : CLLocationCoordinate2D = placemark.location!.coordinate
+                print("Lat: \(coordinates.latitude) -- Long: \(coordinates.longitude)")
+            }
+        })
+    }
+    
 }
 
 

@@ -9,5 +9,5 @@ target 'Pearing_Up' do
     pod 'SwiftyJSON'
     pod 'Alamofire'
     pod 'SVProgressHUD'
-
+    pod 'CoreLocation'
 end
