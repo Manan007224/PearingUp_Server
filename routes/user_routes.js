@@ -255,14 +255,15 @@ Usr.post('/:sender/:post_title/bookmarkpost', async(req, res) =>{
 
 Usr.get('/:sender/savedposts', async (req, res) =>{
 	try {
-		let user = await User.findOne({username: req.params.id});
+		let user = await User.findOne({username: req.params.sender});
 		let posts_to_send = [];
 		for(let idx=0; idx<user.saved_posts.length; idx++) {
-			let temp_post = await Posts.findOne({title: user.saved_posts[idx].title});
-			posts_to_send.push(temp_post);
+			console.log("Post is = ", user.saved_posts[idx]);
+			let ptitle = await Posts.findOne({ title: user.saved_posts[idx]});
+			posts_to_send.push(ptitle);
 		}
-		if (posts_to_send.length === 0)
-			res.status(409).json({code: 409, result: 'server-side error'});
+		if (posts_to_send.length !== 0)
+			res.status(200).json({ code: 200, result: 'Succesfully Completed', saved_posts: posts_to_send});
 		console.log("Posts Length", posts_to_send.length);
 	}
 	catch(err) {
@@ -272,10 +273,20 @@ Usr.get('/:sender/savedposts', async (req, res) =>{
 	}
 });
 
-
+Usr.get('/getpost/:post_id', async (req, res) =>{
+	try {
+		let ptitle = await Posts.findOne({ title: req.params.post_id});
+		console.log("Title is = ", ptitle.title);
+	}
+	catch(err) {
+		console.log(err);
+		res.status(409).json({result: "Server side error"});
+	}
+});
 
 Usr.get('/allUsers', (req, res)=>{
 	User.find({}, (err, usrs) => {
+		console.log(usrs);
 		if(err) console.log(err);
 		else res.status(200).json({code: 200, result: 'Succesfully Completed', Users: usrs});
 	});
@@ -297,6 +308,7 @@ Usr.delete('/allPosts', (req, res) =>{
 
 Usr.delete('/allUsers', (req, res) =>{
 	User.remove({}, (err, pst) =>{
+		//console.log(pst);
 		if(err) console.log(err);
 		else res.status(200).json({code: 200, result: 'Succesfully Completed'});
 	});
