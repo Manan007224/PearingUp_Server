@@ -263,11 +263,14 @@ Usr.get('/:sender/savedposts', async (req, res) =>{
 			posts_to_send.push(ptitle);
 		}
 // Just for debuggin purposessdfsdfsd
-
-		console.log(posts_to_send)
+		let post_titles = []
+		for(let id=0;id<posts_to_send.length; id++) {
+			// console.log("Post title = ", post)
+			post_titles.push(posts_to_send[id].title);
+		}
 
 		if (posts_to_send.length !== 0)
-			res.status(200).json(posts_to_send);
+			res.status(200).json(post_titles);
 		console.log("Posts Length", posts_to_send.length);
 	}
 	catch(err) {
