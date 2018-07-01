@@ -354,10 +354,22 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="REE-cP-T27">
+                                <rect key="frame" x="97" y="657" width="181" height="65"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                <state key="normal" title="Bookmarks"/>
+                                <connections>
+                                    <action selector="gotobookmarks:" destination="T7x-ly-ZLS" eventType="touchUpInside" id="vvK-64-HD5"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="QhE-Ub-5U2"/>
                     </view>
+                    <connections>
+                        <segue destination="e3t-rz-pqt" kind="show" identifier="bookmarkslist" id="Wyw-kF-Fx9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h9E-XF-Dmw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

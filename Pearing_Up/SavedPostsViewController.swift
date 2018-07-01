@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 
 class SavedPostsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
@@ -14,7 +16,7 @@ class SavedPostsViewController: UIViewController, UICollectionViewDataSource, UI
     
     // https://pearingup.herokuapp.com/:sender_username/saved_posts
     
-    
+    let bookmarks_url : URL = URL(string: "https://pearingup.herokuapp.com/manan/savedposts")!
    
     let tArray = ["A", "B", "C", "D", "E"]
     let tImage = [UIImage(named: "tree"), UIImage(named: "tree1"), UIImage(named: "tree2"), UIImage(named: "tree2"), UIImage(named: "tree")]
@@ -25,13 +27,37 @@ class SavedPostsViewController: UIViewController, UICollectionViewDataSource, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        get_bookmarks(url: bookmarks_url)
+        self.collectionView(<#T##collectionView: UICollectionView##UICollectionView#>, cellForItemAt: <#T##IndexPath#>)
+    }
+    
+    
+    // Here passing all the Alamofire requests
+    
+    func get_bookmarks(url: URL) {
+        Alamofire.request(url, method: .get).responseJSON {
+            response in
+            if(response.result.isSuccess) {
+                let temp : JSON = JSON(response.result.value!)
+                print("Success in the get-saved-posts route")
+                //print(response.result.value!)
+                if(temp["code"] == 302 || temp["code"] == 400 || temp["code"] == 409){
+                    self.displayAlert(message: String(describing: temp["result"]))
+                    return
+                }
+            }
+            else {
+                print("Error happened")
+            }
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return tArray.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    
+     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let saved_posts = collectionView.dequeueReusableCell(withReuseIdentifier: "saved_posts_cell", for: indexPath) as! CollectionViewCell
         
@@ -45,5 +71,26 @@ class SavedPostsViewController: UIViewController, UICollectionViewDataSource, UI
         return saved_posts
     }
     
+    func displayAlert(message: String){
+        print("Function being called")
+        let alert_toDisplay = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
+        alert_toDisplay.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action in
+            print("Error")
+        }));
+        self.present(alert_toDisplay, animated: true, completion: nil)
+    }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
