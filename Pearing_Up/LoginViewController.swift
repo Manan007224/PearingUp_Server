@@ -11,7 +11,20 @@ import Alamofire
 import SwiftyJSON
 
 class LoginViewController: UIViewController {
-
+    var gradientLayer: CAGradientLayer!
+    
+/*    func createGradientLayer()
+    {
+        gradientLayer = CAGradientLayer()
+        
+        //define colors
+        gradientLayer.colors=[UIColor.white.cgColor, UIColor.lightGray.cgColor]
+        gradientLayer.locations=[0.0,0.6,0.8]
+        gradientLayer.frame=self.view.bounds
+        self.view.layer.addSublayer(gradientLayer)
+        
+    }*/
+    
     @IBOutlet weak var login_tet: UILabel!
     @IBOutlet weak var pwd_holder: UITextField!
     @IBOutlet weak var email_holder: UITextField!
@@ -19,6 +32,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //createGradientLayer()
 
         // Do any additional setup after loading the view.
     }

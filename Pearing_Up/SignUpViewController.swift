@@ -11,7 +11,21 @@ import Alamofire
 import SwiftyJSON
 
 class SignUpViewController: UIViewController {
-
+    
+    var gradientLayer: CAGradientLayer!
+    
+   /* func createGradientLayer()
+    {
+        gradientLayer = CAGradientLayer()
+        
+        //define colors
+        gradientLayer.colors=[UIColor.white.cgColor, UIColor.lightGray.cgColor]
+        gradientLayer.locations=[0.0,0.6,0.8]
+        gradientLayer.frame=self.view.bounds
+        self.view.layer.addSublayer(gradientLayer)
+        
+    }*/
+    
     let signup_url = "https://pearingup.herokuapp.com/signup"
     @IBOutlet weak var signup_label: UILabel!
     @IBOutlet weak var pwd_holder: UITextField!
@@ -19,7 +33,8 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var username_holder: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-
+       // createGradientLayer()
+        
         // Do any additional setup after loading the view.
     }
     
