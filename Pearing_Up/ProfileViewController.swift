@@ -21,6 +21,12 @@ class ProfileViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    
+    @IBAction func gotobookmarks(_ sender: Any) {
+        self.performSegue(withIdentifier: "bookmarkslist", sender: self)
+    }
+    
+    
 
     /*
     // MARK: - Navigation
