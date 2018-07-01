@@ -262,8 +262,12 @@ Usr.get('/:sender/savedposts', async (req, res) =>{
 			let ptitle = await Posts.findOne({ title: user.saved_posts[idx]});
 			posts_to_send.push(ptitle);
 		}
+// Just for debuggin purposessdfsdfsd
+
+		console.log(posts_to_send)
+
 		if (posts_to_send.length !== 0)
-			res.status(200).json({ code: 200, result: 'Succesfully Completed', saved_posts: posts_to_send});
+			res.status(200).json(posts_to_send);
 		console.log("Posts Length", posts_to_send.length);
 	}
 	catch(err) {
@@ -296,6 +300,16 @@ Usr.get('/allPosts', (req, res) => {
 	Posts.find({}, (err, pst) => {
 		if(err) console.log(err);
 		else res.status(200).json({code: 200, result: 'Succesfully Completed', Posts: pst});
+	});
+});
+
+Usr.get('/:sender/myPosts', (req, res)=>{
+	Posts.find({owner: req.params.sender}, (err, mpst) => {
+		if(err) res.status(409).json({code: 409, result: 'server-side error'});
+		else {
+			//console.log(mpst);
+			end(res, 'Succesfully Completed');
+		}
 	});
 });
 
