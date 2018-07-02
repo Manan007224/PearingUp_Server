@@ -280,10 +280,13 @@ Usr.get('/:sender/savedposts', async (req, res) =>{
 	}
 });
 
+// GET-POST Route
+
 Usr.get('/getpost/:post_id', async (req, res) =>{
 	try {
 		let ptitle = await Posts.findOne({ title: req.params.post_id});
 		console.log("Title is = ", ptitle.title);
+		res.status(200).json(ptitle);
 	}
 	catch(err) {
 		console.log(err);
