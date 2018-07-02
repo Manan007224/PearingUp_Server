@@ -270,7 +270,7 @@ Usr.get('/:sender/savedposts', async (req, res) =>{
 		}
 
 		if (posts_to_send.length !== 0)
-			res.status(200).json(post_titles);
+			res.status(200).json({result: post_titles});
 		console.log("Posts Length", posts_to_send.length);
 	}
 	catch(err) {
