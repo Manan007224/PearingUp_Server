@@ -10,4 +10,6 @@ target 'Pearing_Up' do
     pod 'Alamofire'
     pod 'SVProgressHUD'
     pod 'CoreLocation'
+
+
 end
