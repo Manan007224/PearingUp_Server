@@ -1,6 +1,10 @@
 'use strict'
 var express = require('express');
+var multipart = require('connect-multiparty');
 var app = express();
+var multer = require('multer');
+global.app = module.exports = express();
+app.use(multipart());
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
@@ -15,6 +19,7 @@ var {errWrap, reqLog, end, assert_catch} = require('../config/basic.js');
 var assert = require('assert');
 var _ = require('lodash');
 var fs = require('fs');
+
 
 Usr.get('/', function(req, res){
 	res.status(200).json({code: 200, result: "Succesfully Completed"});
@@ -110,7 +115,7 @@ Usr.get('/logout', (req, res) => {
 // GET - sentRequest/:sender/:receiver - send a follow request to the User who posted the tree
 // :sender - Name of the picker
 // :receiver - Name of the User who posted the tree
-
+// 
 
 Usr.get('/sentRequest/:sender/:receiver', async(req, res)=>{
 	try {
@@ -202,20 +207,8 @@ Usr.post('/:sender/createPost', async(req, res) => {
 		new_tree.info = req.body.info;
 		new_tree.title = req.body.title;
 		new_tree.additional_msg = req.body.additional_msg;
-		// var tImages = [];
-		// let n_image = {image: await fs.readFileSync(req.body.filePath), contentType: 'image/PNG'}
-		// if(req.body.filePath.length > 0) {
-		// 	for(let i=0; i<req.body.filePath.length; i++) {
-		// 		let tImage = {img: await fs.readFileSync(req.body.filePath[i]), contentType: 'image/PNG'}
-		// 		tImages.push(tImage);
-		// 	}
-		// }
-		// new_tree.images = tImages;
-		let bf = await fs.readFileSync('img_text.txt')
-		console.log("BF", bf);
-		let t_image = {img: await fs.readFileSync('img_text.txt'), contentType: 'image/PNG'}
+		let t_image = {img: await fs.readFileSync('tree2.png'), contentType: 'image/png'}
 		new_tree.image = t_image;
-		console.log(new_tree);
 		await new_tree.save({});
 		end(res, 'Succesfully Completed');
 	}
@@ -237,6 +230,7 @@ Usr.post('/:sender/:post_title/bookmarkpost', async(req, res) =>{
 		if(ptitle !== null) {
 			console.log("The saved_posts array = ", user);
 			await User.update({username: req.params.sender}, {$push: {saved_posts: ptitle.title}});
+
 			res.status(200).json({code: 200, result: 'Succesfully Completed'});
 		}
 		else {
@@ -262,7 +256,7 @@ Usr.get('/:sender/savedposts', async (req, res) =>{
 			let ptitle = await Posts.findOne({ title: user.saved_posts[idx]});
 			posts_to_send.push(ptitle);
 		}
-// Just for debuggin purposessdfsdfsd
+    // Just for debuggin purposessdfsdfsd
 		let post_titles = []
 		for(let id=0;id<posts_to_send.length; id++) {
 			// console.log("Post title = ", post)
@@ -280,19 +274,36 @@ Usr.get('/:sender/savedposts', async (req, res) =>{
 	}
 });
 
-// GET-POST Route
+// GET-POST Route 
 
 Usr.get('/getpost/:post_id', async (req, res) =>{
 	try {
 		let ptitle = await Posts.findOne({ title: req.params.post_id});
 		console.log("Title is = ", ptitle.title);
-		res.status(200).json(ptitle);
+		let buffer = ptitle.image.img;
+		var encodedBuffer = buffer.toString('base64');
+		res.contentType('image/png');
+		res.send(ptitle.image.img);
+		//res.sendFile('/Users/navinkumarravindra/Documents/CMPT276-Group3/backend/tree2.png');
 	}
 	catch(err) {
 		console.log(err);
-		res.status(409).json({result: "Server side error"});
+		res.status(200).json({code: 409, result: 'server-side error'});
 	}
 });
+
+Usr.get('/getPostsData/:post_id', async(req, res) =>{
+	try {
+		let ptitle = await Posts.findOne({title: req.params.post_id});
+		console.log("Ptitle = ", ptitle);
+		let to_send = {title: ptitle.title, fruits: ptitle.info.fruits, description: ptitle.additional_msg}
+		res.status(200).json({code: 200, result: to_send});
+	}
+	catch(err) {
+		console.log(err);
+		res.status(409).json({ code: 409, result: 'server-side error' });
+	}
+})
 
 Usr.get('/allUsers', (req, res)=>{
 	User.find({}, (err, usrs) => {

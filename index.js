@@ -1,6 +1,9 @@
 'use strict'
 var express = require('express');
+var multipart = require('connect-multiparty');
 var app = express();
+global.app = module.exports = express();
+app.use(multipart());
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
