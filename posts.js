@@ -14,6 +14,7 @@ var imgSchema = Schema({
 var postSchema = Schema({
     owner: String,
     title: String,
+    img_id: String,
     info: infoSchema,
     image : imgSchema,
     pickers: [String],

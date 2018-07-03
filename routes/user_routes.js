@@ -19,6 +19,13 @@ var {errWrap, reqLog, end, assert_catch} = require('../config/basic.js');
 var assert = require('assert');
 var _ = require('lodash');
 var fs = require('fs');
+var multer = require('multer');
+var GridFsStorage = require('multer-gridfs-storage');
+var Grid = require('gridfs-stream');
+var crypto = require('crypto');
+var path = require('path');
+
+
 
 
 Usr.get('/', function(req, res){
@@ -117,7 +124,7 @@ Usr.get('/logout', (req, res) => {
 // :receiver - Name of the User who posted the tree
 // 
 
-Usr.get('/sentRequest/:sender/:receiver', async(req, res)=>{
+Usr.post('/sentRequest/:sender/:receiver', async(req, res)=>{
 	try {
 		let {sender, receiver} = req.params;
 		let snd = await User.findOne({'username': sender});
@@ -129,8 +136,9 @@ Usr.get('/sentRequest/:sender/:receiver', async(req, res)=>{
 		let idx = _.find(rcv.requested, (ch) => {
 			return ch == id_found;
 		});
+		let request_user = {username: req.params.sender, add_msg: req.body.add_msg}
 		assert_catch('notDeepStrictEqual', idx, undefined, 'Already Requested to the User', res, 409);
-		await User.update({'username': req.params.receiver}, {$push: {'requested': req.params.sender}});
+		await User.update({'username': req.params.receiver}, {$push: {'requested': request_user}});
 		end(res, 'Succesfully Completed');
 	}
 	catch(err) {

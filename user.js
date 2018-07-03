@@ -2,6 +2,11 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var schema = mongoose.Schema;
 
+var requested_people = schema({
+	username: String,
+	add_msg: String 
+});
+
 var userSchema = schema({
 	username: String,
 	full_name: String,
@@ -12,7 +17,7 @@ var userSchema = schema({
 	radius: String,
 	followers: [String],
 	following: [String],
-	requested: [String],
+	requested: [requested_people],
 	picked: [String],
 	posted: [String],
 	saved_posts: [String],
