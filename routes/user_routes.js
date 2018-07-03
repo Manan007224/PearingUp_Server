@@ -283,7 +283,7 @@ Usr.get('/getpost/:post_id', async (req, res) =>{
 		let buffer = ptitle.image.img;
 		var encodedBuffer = buffer.toString('base64');
 		res.contentType('image/png');
-		res.send(ptitle.image.img);
+		res.send(ptitle.image);
 		//res.sendFile('/Users/navinkumarravindra/Documents/CMPT276-Group3/backend/tree2.png');
 	}
 	catch(err) {
