@@ -1,0 +1,6 @@
+framework module Pods_Pearing_Up {
+  umbrella header "Pods-Pearing_Up-umbrella.h"
+
+  export *
+  module * { export * }
+}
