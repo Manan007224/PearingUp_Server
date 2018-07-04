@@ -106,6 +106,18 @@ Usr.post('/:sender/signup_info', async(req, res) =>{
 	}
 });
 
+Usr.get('/getProfile/:username', async(req, res) =>{
+	try {
+		let usr = await User.findOne({'username': req.params.username});
+		res.status(200).json({code :200, result: usr});
+	}
+	catch(err) {
+		reqLog(err);
+		console.log(err);
+		res.status(409).status({ code: 409, result: 'server-side error' });
+	}
+});
+
 Usr.get('/profile/:id', (req, res) =>{
 	console.log("Req.query = ", req.query);
 	let _id = req.params.id;
