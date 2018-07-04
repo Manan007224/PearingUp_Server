@@ -48,7 +48,7 @@ Usr.post('/login', (req, res)=>{
 				{console.log("Password is: ",user_pw); res.status(409).json({code: 409, result: "Entered Password in incorrect"});}
 		else {
 			let redirect_url = '/profile/' + user_email
-			res.redirect(redirect_url);
+			res.status(200).json({code: 200, result: usr.username});
 		}
 	});
 });
