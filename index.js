@@ -124,7 +124,8 @@ app.post('/uploadPostDetails/:id', async (req, res) =>{
 
 app.get('/getpost/:postid', async (req, res) =>{
 	try {
-		let ptitle = await Post.findOne({ title: req.params.post_id });
+		let ptitle = await Post.findOne({ 'title': req.params.postid });
+		console.log('pt', ptitle);
 		let file_id = ptitle.img_id;
 		console.log(file_id);
 		await gfs.files.findOne({_id: ObjectId(file_id)}, (err, fl) =>{
