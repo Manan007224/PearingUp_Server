@@ -65,7 +65,7 @@ Usr.post('/signup', async(req, res) => {
 		let eml = await User.findOne({'email': email});
 		console.log("email = ", eml);
 		if(usnm != null) res.status(409).json({code: 409, result: 'Username already exists'});
-		if(eml != null) res.status(409).json({code: 409, result: 'Email already exists'});
+		else if(eml != null) res.status(409).json({code: 409, result: 'Email already exists'});
 		else {
 			console.log('CHECKED ALL THE CONDITIONS');
 			let nUser = new User();
