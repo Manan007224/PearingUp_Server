@@ -315,6 +315,7 @@ Usr.get('/:sender/savedposts', async (req, res) =>{
 Usr.get('/getPostsData/:post_id', async(req, res) =>{
 	try {
 		let ptitle = await Posts.findOne({title: req.params.post_id});
+		console.log(ptitle);
 		console.log("Ptitle = ", ptitle);
 		let to_send = {title: ptitle.title, fruits: ptitle.info.fruits, description: ptitle.additional_msg}
 		res.status(200).json({code: 200, result: to_send});

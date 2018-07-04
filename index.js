@@ -92,20 +92,29 @@ app.post('/upload', upload.single('file'), (req, res) => {
 app.post('/uploadPostDetails/:id', async (req, res) =>{
 	try {
 		//let { fruits, additional_msg, title } = req.body;
-		let pst = await Post.findOne({ img_id: req.params.id }, (err, pt) => {
+		let post_find = await Post.findOne({'img_id': req.params.id }, (err, pt) => {
 			if (err) console.log(err);
 			else console.log(pt);
 		});
+		//console.log("Pst = ", pst);
+		let pst = new Post();
 		pst.info = {fruits: req.body.info.fruits}; 
 		pst.additional_msg = req.body.additional_msg; pst.title = req.body.title;
 		pst.owner = req.body.owner;
-		await Post.findOneAndUpdate({ username: req.params.id }, { pst }, { new: true }, (err, usr) => {
-			if (err) res.status(200).json({ result: err });
-			else {
-				console.log(pst);
-				res.status(200).json(pst);
-			}
+		pst.img_id = req.params.id;
+		await Post.findOneAndRemove({'img_id': req.params.id});
+		await pst.save({}, (err, pts) =>{
+			if(err) console.log(err);
+			else console.log(pts);
 		});
+		res.status(200).json({result: 'Done'});
+		// await Post.findOneAndUpdate({ username: req.params.id }, { pst }, { new: true }, (err, usr) => {
+		// 	if (err) res.status(200).json({ result: err });
+		// 	else {
+		// 		console.log(pst);
+		// 		res.status(200).json(pst);
+		// 	}
+		// });
 	}
 	catch(err) {
 		console.log(err);
