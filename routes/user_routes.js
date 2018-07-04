@@ -152,6 +152,18 @@ Usr.post('/sentRequest/:sender/:receiver', async(req, res)=>{
 // :sender - Name of the Person who has to accept the requests
 // :receiver - Name of the Person who had initially sent the request to the sender.
 
+Usr.get('/:sender/getRequests', async(req, res) =>{
+	try {
+		let snd = await User.findOne({username: req.params.sender});
+		res.status(200).json({ code: 200, result: snd.requested})
+	}
+	catch(err) {
+		reqLog(err);
+		console.log(err);
+		res.status(409).json({code: 409, result: 'server-side error'});
+	}
+});
+
 Usr.get('/AcceptRequest/:sender/:receiver', async(req, res)=>{
 	try{
 		let {sender, receiver} = req.params;
@@ -284,21 +296,21 @@ Usr.get('/:sender/savedposts', async (req, res) =>{
 
 // GET-POST Route 
 
-Usr.get('/getpost/:post_id', async (req, res) =>{
-	try {
-		let ptitle = await Posts.findOne({ title: req.params.post_id});
-		console.log("Title is = ", ptitle.title);
-		let buffer = ptitle.image.img;
-		var encodedBuffer = buffer.toString('base64');
-		res.contentType('image/png');
-		res.send(ptitle.image.img);
-		//res.sendFile('/Users/navinkumarravindra/Documents/CMPT276-Group3/backend/tree2.png');
-	}
-	catch(err) {
-		console.log(err);
-		res.status(200).json({code: 409, result: 'server-side error'});
-	}
-});
+// Usr.get('/getpost/:post_id', async (req, res) =>{
+// 	try {
+// 		let ptitle = await Posts.findOne({ title: req.params.post_id});
+// 		console.log("Title is = ", ptitle.title);
+// 		let buffer = ptitle.image.img;
+// 		var encodedBuffer = buffer.toString('base64');
+// 		res.contentType('image/png');
+// 		res.send(ptitle.image.img);
+// 		//res.sendFile('/Users/navinkumarravindra/Documents/CMPT276-Group3/backend/tree2.png');
+// 	}
+// 	catch(err) {
+// 		console.log(err);
+// 		res.status(200).json({code: 409, result: 'server-side error'});
+// 	}
+// });
 
 Usr.get('/getPostsData/:post_id', async(req, res) =>{
 	try {
@@ -337,6 +349,7 @@ Usr.get('/:sender/myPosts', (req, res)=>{
 		}
 	});
 });
+
 
 Usr.delete('/allPosts', (req, res) =>{
 	Posts.remove({}, (err, pst) =>{

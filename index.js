@@ -13,12 +13,15 @@ var mongoose = require('mongoose');
 var cookieParser = require('cookie-parser');
 var User = require('./user');
 var mongodb = require("mongodb");
+const { ObjectId } = require('mongodb');
 var ObjectID = mongodb.ObjectID;
 var multer = require('multer');
 var GridFsStorage = require('multer-gridfs-storage');
 var Grid = require('gridfs-stream');
 var crypto = require('crypto');
 var path = require('path');
+var Post = require('./posts.js');
+var User = require('./user.js');
 
 const dbOptions = {};
 app.use(bodyParser.json());
@@ -74,15 +77,66 @@ const storage = new GridFsStorage({
 
 const upload = multer({ storage });
 
-app.post('/upload', upload.single('file', 'fruits'), (req, res) => {
-	//console.log(req.file.data);
-	let fruits = req.fruits;
-	console.log(fruits);
-	res.json({ file: req.file });
+app.post('/upload', upload.single('file'), (req, res) => {
+	let _id = req.file.id;
+	let pst = new Post();
+	pst.img_id = _id;
+	pst.save({}, (err, pst) =>{
+		if(err) console.log(err);
+		else console.log('Saved', pst);
+	});
+	res.json({ id: req.file.id });
 });
 
 
+app.post('/uploadPostDetails/:id', async (req, res) =>{
+	try {
+		//let { fruits, additional_msg, title } = req.body;
+		let pst = await Post.findOne({ img_id: req.params.id }, (err, pt) => {
+			if (err) console.log(err);
+			else console.log(pt);
+		});
+		pst.info = {fruits: req.body.info.fruits}; 
+		pst.additional_msg = req.body.additional_msg; pst.title = req.body.title;
+		pst.owner = req.body.owner;
+		await Post.findOneAndUpdate({ username: req.params.id }, { pst }, { new: true }, (err, usr) => {
+			if (err) res.status(200).json({ result: err });
+			else {
+				console.log(pst);
+				res.status(200).json(pst);
+			}
+		});
+	}
+	catch(err) {
+		console.log(err);
+		res.status(200).json({ result: err });
+	}
+});
 
+app.get('/getpost/:postid', async (req, res) =>{
+	try {
+		let ptitle = await Post.findOne({ title: req.params.post_id });
+		let file_id = ptitle.img_id;
+		console.log(file_id);
+		await gfs.files.findOne({_id: ObjectId(file_id)}, (err, fl) =>{
+			if(!fl) {
+				console.log(err);
+				res.status(409).json({err: err});
+			}
+			else {
+				console.log(fl);
+				const readstream = gfs.createReadStream(fl.filename);
+				readstream.pipe(res);
+				res.contentType('image/png');
+				//res.json(readstream);
+			}
+		});
+	}
+	catch(err) {
+		console.log(err);
+		res.status(409).json({result: 'server-side error'});
+	}
+});
 
 app.set('port', (process.env.PORT || 5000));
 
