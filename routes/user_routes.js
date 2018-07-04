@@ -63,16 +63,18 @@ Usr.post('/signup', async(req, res) => {
 		let usnm = await User.findOne({'username': username});
 		console.log('Username = ', usnm);
 		let eml = await User.findOne({'email': email});
-		console.log("emai = ", eml);
-		assert_catch('notDeepStrictEqual', usnm, null, 'Username Already Exists', res, 409);
-		assert_catch('notDeepStrictEqual', eml, null, 'Email Already Exists', res, 409);
-		console.log('CHECKED ALL THE CONDITIONS');
-		let nUser = new User();
-		nUser.username = username; nUser.email = email;
-		nUser.password = nUser.generateHash(password);
-		await nUser.save({});
-		console.log('SAVED SUCCESFULLY THE NEW USER');
-		res.redirect('/');
+		console.log("email = ", eml);
+		if(usnm != null) res.status(409).json({code: 409, result: 'Username already exists'});
+		if(eml != null) res.status(409).json({code: 409, result: 'Email already exists'});
+		else {
+			console.log('CHECKED ALL THE CONDITIONS');
+			let nUser = new User();
+			nUser.username = username; nUser.email = email;
+			nUser.password = nUser.generateHash(password);
+			await nUser.save({});
+			console.log('SAVED SUCCESFULLY THE NEW USER');
+			res.redirect('/');
+		} 
 	}
 	catch(err) {
 		reqLog(err);
