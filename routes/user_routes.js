@@ -162,6 +162,20 @@ Usr.post('/sentRequest/:sender/:receiver', async(req, res)=>{
 	}
 });
 
+Usr.get('/declineRequest/:sender/:receiver', async(req, res) =>{
+	try {
+		let {sender, receiver} = req.params;
+		let snd = await User.findOne({ 'username': sender });
+		let rcv = await User.findOne({ 'username': receiver });
+		await User.update({'username': req.params.receiver}, {$push: {'requested': request_user}});
+	}
+	catch(err) {
+		reqLog(err);
+		console.log(err);
+		res.status(409).json({code: 409, result: 'server-side error'});
+	}
+});
+
 // GET - AcceptRequest/:sender/:receiver - Accept a pending Request
 // :sender - Name of the Person who has to accept the requests
 // :receiver - Name of the Person who had initially sent the request to the sender.
@@ -184,15 +198,20 @@ Usr.get('/AcceptRequest/:sender/:receiver', async(req, res)=>{
 		console.log("Sender is: ", sender, "Receiver is: ", receiver);
 		let snd = await User.findOne({'username': sender});
 		let rcv = await User.findOne({'username': receiver});
+		console.log("REACHED HERE");
 		assert_catch('notStrictEqual', snd, rcv, 'Invalid Request', res, 409);
 		let id_found = '...';
 		let idx = _.find(snd.followers, (ch) => {
 			return ch == id_found;
 		});
+		console.log("REACHED HERE1");
 		assert_catch('notDeepStrictEqual', idx, undefined, 'Already Requested to the User', res, 409);
 		await User.update({'username': req.params.sender}, {$push: {'followers': req.params.receiver}});
-		await User.update({'username': req.params.sender}, {$pull: {'following': req.params.receiver}});
+		console.log("REACHED HERE2");
+		await User.update({'username': req.params.sender}, {$pull: {'requested': req.params.receiver}});
+		console.log("REACHED HERE3");
 		await User.update({'username': req.params.receiver}, {$push: {'following': req.params.sender}});
+		console.log("REACHED HERE4");
 		end(res, 'Succesfully Completed');		
 	}
 	catch(err){
