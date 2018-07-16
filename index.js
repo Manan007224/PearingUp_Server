@@ -138,6 +138,37 @@ app.get('/getpost/:postid', async (req, res) =>{
 	}
 });
 
+app.delete('/post/:postid', async(req, res)=>{
+	try{
+		await Post.findOneAndRemove({'title': req.params.postid});
+		res.status(200).json({result: 'Done'});
+	}
+	catch(error){
+		console.log(error);
+		res.status(409).json({ result: err });
+	}
+});
+
+
+app.delete('/image/:id', async(req, res)=>{
+	try{
+		await gfs.remove({_id: req.params.id, root: 'tree_photos'}, (err, gridstore) =>{
+			if(err)
+				res.status(409).json({result: err});
+			else 
+				res.status(200).json({ result: 'Done' });
+		})
+	}
+	catch(error){
+		console.log(error);
+		res.status(409).json({ result: err });
+	}
+});
+
+// Also need to add the route for editing the post
+
+
+
 app.set('port', (process.env.PORT || 5000));
 
 app.listen(app.get('port'), ()=>{

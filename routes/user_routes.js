@@ -25,9 +25,6 @@ var Grid = require('gridfs-stream');
 var crypto = require('crypto');
 var path = require('path');
 
-
-
-
 Usr.get('/', function(req, res){
 	res.status(200).json({code: 200, result: "Succesfully Completed"});
 });
@@ -133,10 +130,6 @@ Usr.get('/logout', (req, res) => {
 	req.redirect('/login');
 });
 
-// GET - sentRequest/:sender/:receiver - send a follow request to the User who posted the tree
-// :sender - Name of the picker
-// :receiver - Name of the User who posted the tree
-// 
 
 Usr.post('/sentRequest/:sender/:receiver', async(req, res)=>{
 	try {
@@ -189,10 +182,6 @@ Usr.get('/declineRequest/:sender/:receiver', async(req, res) =>{
 	}
 });
 
-// GET - AcceptRequest/:sender/:receiver - Accept a pending Request
-// :sender - Name of the Person who has to accept the requests
-// :receiver - Name of the Person who had initially sent the request to the sender.
-
 Usr.get('/:sender/getRequests', async(req, res) =>{
 	try {
 		let snd = await User.findOne({username: req.params.sender});
@@ -229,39 +218,6 @@ Usr.get('/AcceptRequest/:sender/:receiver', async(req, res)=>{
 	}
 });
 
-// POST-REQUEST ROUTE TO THE WORK
-// I AM JUST TRYING SOME 
-
-// POST - /:sender/createPost - Post a new Post with Multiple Images
-// :sender is the Username
-// Sample JSON Data Would be :
-//  	{ 
-//			pickers: [],
-//   		_id: 5b33a662c52e3469504b3973,
-//   		images:
-//    			[ 
-//					{	
-//						_id: 5b33a662c52e3469504b3976,
-//        				img: [Object],
-//        				contentType: 'image/PNG'
-//					},
-//      			{ 					
-//						_id: 5b33a662c52e3469504b3975,
-//        				img: [Object],
-//        				contentType: 'image/PNG' 
-//					} 
-//				],
-//   		owner: 'manan_test',
-//   		info:
-//    		{ 
-//				_id: 5b33a662c52e3469504b3974,
-//      		Expected_Yield: '200',
-//      		fruits: 'Apples' 
-//			},
-//   		additional_msg: 'None' 
-//		}
-
-
 Usr.post('/:sender/createPost', async(req, res) => {
 	try {
 		let owner = await User.findOne({'username': req.params.sender});
@@ -283,58 +239,59 @@ Usr.post('/:sender/createPost', async(req, res) => {
 	}
 });
 
-//	POST - /:sender/:post_title/addtosavedposts let's a user add a posts to their saved list
-//  post_title is assumed unique
-
-Usr.post('/:sender/:post_title/bookmarkpost', async(req, res) =>{
-	try {
-		let user = await User.findOne({username: req.params.sender});
-		let ptitle = await Posts.findOne({title: req.params.post_title});
-		console.log('Title is = ', ptitle.title);
-		if(ptitle !== null) {
+Usr.get('/bookmarkPost/:user/:post_title', async(req, res)=>{
+	try{
+		let user = await User.findOne({username: req.params.user});
+		console.log(user);
+		let ptitle = await Posts.findOne({ title: req.params.post_title });
+		if(ptitle!=null){
 			console.log("The saved_posts array = ", user);
-			await User.update({username: req.params.sender}, {$push: {saved_posts: ptitle.title}});
-
-			res.status(200).json({code: 200, result: 'Succesfully Completed'});
+			await User.update({ username: req.params.user }, { $push: { saved_posts: ptitle.title }});
+			res.status(200).json({ code: 200, result: 'Succesfully Completed' });
 		}
-		else {
+		else{
 			res.status(409).json({ code: 409, result: 'server-side error' });
 		}
 	}
-	catch(err) {
+	catch(error){
 		reqLog(err);
-		console.log(err);
+		console.error(error);
 		res.status(409).json({ code: 409, result: 'server-side error' });
 	}
 });
 
-// GET - /:sender/savedposts returns all the saved posts by a particular user
-// returns an array of saved_posts
-
-Usr.get('/:sender/savedposts', async (req, res) =>{
-	try {
-		let user = await User.findOne({username: req.params.sender});
-		let posts_to_send = [];
-		for(let idx=0; idx<user.saved_posts.length; idx++) {
-			console.log("Post is = ", user.saved_posts[idx]);
-			let ptitle = await Posts.findOne({ title: user.saved_posts[idx]});
-			posts_to_send.push(ptitle);
+Usr.get('/unBookmarkPost/:user/:post_title', async(req, res)=>{
+	try{
+		let user = await User.findOne({ username: req.params.user });
+		console.log(user);
+		let ptitle = await Posts.findOne({ title: req.params.post_title });
+		if (ptitle != null) {
+			console.log("The saved_posts array = ", user);
+			await User.update({ username: req.params.user }, {$pull: {saved_posts: ptitle.title }});
+			res.status(200).json({ code: 200, result: 'Succesfully Completed' });
 		}
-    // Just for debuggin purposessdfsdfsd
-		let post_titles = []
-		for(let id=0;id<posts_to_send.length; id++) {
-			// console.log("Post title = ", post)
-			post_titles.push(posts_to_send[id].title);
+		else {
+			console.log('Happened Here');
+			res.status(409).json({ code: 409, result: 'server-side error' });
 		}
-
-		if (posts_to_send.length !== 0)
-			res.status(200).json({result: post_titles});
-		console.log("Posts Length", posts_to_send.length);
 	}
-	catch(err) {
+	catch(error){
 		reqLog(err);
-		console.log(err);
-		res.status(409).json({code: 409, result: 'server-side error'});
+		console.error(error);
+		res.status(409).json({ code: 409, result: 'server-side error' });
+	}
+})
+
+Usr.get('/:sender/getBookmarkedPosts', async(req, res)=>{
+	try {
+		let user = await User.findOne({ username: req.params.sender});
+		let bkposts = user.saved_posts;
+		res.status(200).json({result: bkposts});
+	}
+	catch(error){
+		reqLog(error);
+		console.error(error);
+		res.status(409).json({ code: 409, result: 'server-side error' });
 	}
 });
 
