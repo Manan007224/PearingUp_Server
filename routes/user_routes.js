@@ -12,9 +12,9 @@ var passport = require('passport');
 var session = require('express-session');
 var mongoose = require('mongoose');
 var Usr = express.Router();
-var User = require('../user');
-var Tree = require('../tree.js');
-var Posts = require('../posts.js');
+var User = require('../models/user.js');
+var Tree = require('../models/tree.js');
+var Posts = require('../models/posts.js');
 var {errWrap, reqLog, end, assert_catch} = require('../config/basic.js');
 var assert = require('assert');
 var _ = require('lodash');
@@ -162,12 +162,25 @@ Usr.post('/sentRequest/:sender/:receiver', async(req, res)=>{
 	}
 });
 
+
+var findRequestByKey = (array, key, value) => {
+	for(let i=0;i<array.length;i++){
+		if(array[i][key]===value)
+			return array[i];	
+	}
+	return null;
+}
+
 Usr.get('/declineRequest/:sender/:receiver', async(req, res) =>{
 	try {
 		let {sender, receiver} = req.params;
 		let snd = await User.findOne({ 'username': sender });
 		let rcv = await User.findOne({ 'username': receiver });
-		await User.update({'username': req.params.receiver}, {$push: {'requested': request_user}});
+		console.log(snd);
+		var rqs_person = findRequestByKey(snd.requested, 'username', req.params.receiver);
+		console.log(rqs_person);
+		await User.update({'username': req.params.sender}, {$pull: {'requested': rqs_person}});
+		res.status(200).json({code: 200, result: 'Succesfully Completed'});
 	}
 	catch(err) {
 		reqLog(err);
@@ -198,20 +211,15 @@ Usr.get('/AcceptRequest/:sender/:receiver', async(req, res)=>{
 		console.log("Sender is: ", sender, "Receiver is: ", receiver);
 		let snd = await User.findOne({'username': sender});
 		let rcv = await User.findOne({'username': receiver});
-		console.log("REACHED HERE");
 		assert_catch('notStrictEqual', snd, rcv, 'Invalid Request', res, 409);
 		let id_found = '...';
 		let idx = _.find(snd.followers, (ch) => {
 			return ch == id_found;
 		});
-		console.log("REACHED HERE1");
 		assert_catch('notDeepStrictEqual', idx, undefined, 'Already Requested to the User', res, 409);
 		await User.update({'username': req.params.sender}, {$push: {'followers': req.params.receiver}});
-		console.log("REACHED HERE2");
 		await User.update({'username': req.params.sender}, {$pull: {'requested': req.params.receiver}});
-		console.log("REACHED HERE3");
 		await User.update({'username': req.params.receiver}, {$push: {'following': req.params.sender}});
-		console.log("REACHED HERE4");
 		end(res, 'Succesfully Completed');		
 	}
 	catch(err){
@@ -220,6 +228,9 @@ Usr.get('/AcceptRequest/:sender/:receiver', async(req, res)=>{
 		res.status(409).json({code: 409, result: 'server-side error'});
 	}
 });
+
+// POST-REQUEST ROUTE TO THE WORK
+// I AM JUST TRYING SOME 
 
 // POST - /:sender/createPost - Post a new Post with Multiple Images
 // :sender is the Username
@@ -327,24 +338,6 @@ Usr.get('/:sender/savedposts', async (req, res) =>{
 	}
 });
 
-// GET-POST Route 
-
-// Usr.get('/getpost/:post_id', async (req, res) =>{
-// 	try {
-// 		let ptitle = await Posts.findOne({ title: req.params.post_id});
-// 		console.log("Title is = ", ptitle.title);
-// 		let buffer = ptitle.image.img;
-// 		var encodedBuffer = buffer.toString('base64');
-// 		res.contentType('image/png');
-// 		res.send(ptitle.image.img);
-// 		//res.sendFile('/Users/navinkumarravindra/Documents/CMPT276-Group3/backend/tree2.png');
-// 	}
-// 	catch(err) {
-// 		console.log(err);
-// 		res.status(200).json({code: 409, result: 'server-side error'});
-// 	}
-// });
-
 Usr.get('/getPostsData/:post_id', async(req, res) =>{
 	try {
 		let ptitle = await Posts.findOne({title: req.params.post_id});
@@ -357,7 +350,7 @@ Usr.get('/getPostsData/:post_id', async(req, res) =>{
 		console.log(err);
 		res.status(409).json({ code: 409, result: 'server-side error' });
 	}
-})
+});
 
 Usr.get('/allUsers', (req, res)=>{
 	User.find({}, (err, usrs) => {

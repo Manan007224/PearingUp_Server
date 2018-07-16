@@ -2,8 +2,6 @@
 var express = require('express');
 var multipart = require('connect-multiparty');
 var app = express();
-//global.app = module.exports = express();
-//app.use(multipart());
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
@@ -11,7 +9,6 @@ var passport = require('passport');
 var session = require('express-session');
 var mongoose = require('mongoose');
 var cookieParser = require('cookie-parser');
-var User = require('./user');
 var mongodb = require("mongodb");
 const { ObjectId } = require('mongodb');
 var ObjectID = mongodb.ObjectID;
@@ -20,8 +17,8 @@ var GridFsStorage = require('multer-gridfs-storage');
 var Grid = require('gridfs-stream');
 var crypto = require('crypto');
 var path = require('path');
-var Post = require('./posts.js');
-var User = require('./user.js');
+var Post = require('./models/posts.js');
+var User = require('./models/user.js');
 
 const dbOptions = {};
 app.use(bodyParser.json());
@@ -79,12 +76,12 @@ const upload = multer({ storage });
 
 app.post('/upload', upload.single('file'), (req, res) => {
 	let _id = req.file.id;
-	let pst = new Post();
-	pst.img_id = _id;
-	pst.save({}, (err, pst) =>{
-		if(err) console.log(err);
-		else console.log('Saved', pst);
-	});
+	// let pst = new Post();
+	// pst.img_id = _id;
+	// pst.save({}, (err, pst) =>{
+	// 	if(err) console.log(err);
+	// 	else console.log('Saved', pst);
+	// });
 	res.json({ id: req.file.id });
 });
 
@@ -92,29 +89,22 @@ app.post('/upload', upload.single('file'), (req, res) => {
 app.post('/uploadPostDetails/:id', async (req, res) =>{
 	try {
 		//let { fruits, additional_msg, title } = req.body;
-		let post_find = await Post.findOne({'img_id': req.params.id }, (err, pt) => {
-			if (err) console.log(err);
-			else console.log(pt);
-		});
+		// let post_find = await Post.findOne({'img_id': req.params.id }, (err, pt) => {
+		// 	if (err) console.log(err);
+		// 	else console.log(pt);
+		// });
 		//console.log("Pst = ", pst);
 		let pst = new Post();
 		pst.info = {fruits: req.body.info.fruits}; 
 		pst.additional_msg = req.body.additional_msg; pst.title = req.body.title;
 		pst.owner = req.body.owner;
 		pst.img_id = req.params.id;
-		await Post.findOneAndRemove({'img_id': req.params.id});
+		//await Post.findOneAndRemove({'img_id': req.params.id});
 		await pst.save({}, (err, pts) =>{
 			if(err) console.log(err);
 			else console.log(pts);
 		});
 		res.status(200).json({result: 'Done'});
-		// await Post.findOneAndUpdate({ username: req.params.id }, { pst }, { new: true }, (err, usr) => {
-		// 	if (err) res.status(200).json({ result: err });
-		// 	else {
-		// 		console.log(pst);
-		// 		res.status(200).json(pst);
-		// 	}
-		// });
 	}
 	catch(err) {
 		console.log(err);
