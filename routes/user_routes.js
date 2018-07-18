@@ -205,9 +205,10 @@ Usr.get('/AcceptRequest/:sender/:receiver', async(req, res)=>{
 		let idx = _.find(snd.followers, (ch) => {
 			return ch == id_found;
 		});
+		var rqs_person = findRequestByKey(snd.requested, 'username', req.params.receiver);
 		assert_catch('notDeepStrictEqual', idx, undefined, 'Already Requested to the User', res, 409);
 		await User.update({'username': req.params.sender}, {$push: {'followers': req.params.receiver}});
-		await User.update({'username': req.params.sender}, {$pull: {'requested': req.params.receiver}});
+		await User.update({'username': req.params.sender}, {$pull: {'requested': rqs_person}});
 		await User.update({'username': req.params.receiver}, {$push: {'following': req.params.sender}});
 		end(res, 'Succesfully Completed');		
 	}

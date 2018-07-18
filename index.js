@@ -76,30 +76,17 @@ const upload = multer({ storage });
 
 app.post('/upload', upload.single('file'), (req, res) => {
 	let _id = req.file.id;
-	// let pst = new Post();
-	// pst.img_id = _id;
-	// pst.save({}, (err, pst) =>{
-	// 	if(err) console.log(err);
-	// 	else console.log('Saved', pst);
-	// });
 	res.json({ id: req.file.id });
 });
 
 
 app.post('/uploadPostDetails/:id', async (req, res) =>{
 	try {
-		//let { fruits, additional_msg, title } = req.body;
-		// let post_find = await Post.findOne({'img_id': req.params.id }, (err, pt) => {
-		// 	if (err) console.log(err);
-		// 	else console.log(pt);
-		// });
-		//console.log("Pst = ", pst);
 		let pst = new Post();
 		pst.info = {fruits: req.body.info.fruits}; 
 		pst.additional_msg = req.body.additional_msg; pst.title = req.body.title;
 		pst.owner = req.body.owner;
 		pst.img_id = req.params.id;
-		//await Post.findOneAndRemove({'img_id': req.params.id});
 		await pst.save({}, (err, pts) =>{
 			if(err) console.log(err);
 			else console.log(pts);
@@ -128,7 +115,6 @@ app.get('/getpost/:postid', async (req, res) =>{
 				const readstream = gfs.createReadStream(fl.filename);
 				readstream.pipe(res);
 				res.contentType('image/png');
-				//res.json(readstream);
 			}
 		});
 	}
@@ -165,11 +151,9 @@ app.delete('/image/:id', async(req, res)=>{
 	}
 });
 
-// Also need to add the route for editing the post
 
 
-
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 8000));
 
 app.listen(app.get('port'), ()=>{
 	console.log('server running at localhost 5000');
