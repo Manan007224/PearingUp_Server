@@ -287,7 +287,12 @@ Usr.get('/:sender/getBookmarkedPosts', async(req, res)=>{
 	try {
 		let user = await User.findOne({ username: req.params.sender});
 		let bkposts = user.saved_posts;
-		res.status(200).json({result: bkposts});
+		let posts_send = [];
+		for(let i=0;i<bkposts.length; i++){
+			let tempPost = await Posts.findOne({'title': bkposts[i]});
+			posts_send.push(tempPost);
+		}
+		res.status(200).json({result: posts_send});
 	}
 	catch(error){
 		reqLog(error);
