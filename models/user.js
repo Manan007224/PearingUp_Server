@@ -4,7 +4,8 @@ var schema = mongoose.Schema;
 
 var requested_people = schema({
 	username: String,
-	add_msg: String 
+	add_msg: String,
+	end_date: Date
 });
 
 var userSchema = schema({
@@ -21,6 +22,9 @@ var userSchema = schema({
 	picked: [String],
 	posted: [String],
 	saved_posts: [String],
+	ownerRating: Number,
+	pickerRating: Number
+
 });
 
 //hashes the passoword before it reaches to the database

@@ -124,11 +124,32 @@ Usr.get('/profile/:id', (req, res) =>{
 	res.status(200).json({code: 200, result: _id});
 });
 
+Usr.get('/getUser/:username', async(req, res)=>{
+	try{
+		let usr = await User.findOne({'username': req.params.username});
+		console.log(usr);
+		res.status(200).json({code: 200, result: usr});
+	}
+	catch(error){
+		console.log(error);
+		res.status(409).json({code: 409, result: 'Server-side error'});
+	}
+})
 
 Usr.get('/logout', (req, res) => {
 	req.logout();
 	req.redirect('/login');
 });
+
+Usr.get('/rateUser/rateType/sender/receiver', async(req, res)=>{
+	try{
+
+	}
+	catch(error){
+		console.log(error);
+
+	}
+})
 
 
 Usr.post('/sentRequest/:sender/:receiver', async(req, res)=>{
@@ -143,7 +164,7 @@ Usr.post('/sentRequest/:sender/:receiver', async(req, res)=>{
 		let idx = _.find(rcv.requested, (ch) => {
 			return ch == id_found;
 		});
-		let request_user = {username: req.params.sender, add_msg: req.body.add_msg}
+		let request_user = {username: req.params.sender, add_msg: req.body.add_msg, end_date: req.body.end_date}
 		assert_catch('notDeepStrictEqual', idx, undefined, 'Already Requested to the User', res, 409);
 		await User.update({'username': req.params.receiver}, {$push: {'requested': request_user}});
 		end(res, 'Succesfully Completed');
@@ -179,6 +200,28 @@ Usr.get('/declineRequest/:sender/:receiver', async(req, res) =>{
 		reqLog(err);
 		console.log(err);
 		res.status(409).json({code: 409, result: 'server-side error'});
+	}
+});
+
+
+// Route to get get contacts of a particular result
+
+Usr.get('/:username/getContacts', async(req, res)=>{
+	try{
+		let contacts = new Set();
+		let snd = await User.findOne({'username': req.params.username});
+		for(let i=0;i<snd.followers.length; i++){
+			contacts.add(snd.requested[i]);
+		}
+		for(let j=0;j<snd.following.length; j++){
+			contacts.add(snd.following[j]);
+		}
+		res.status(200).json({code: 200, result: contacts});
+	}
+	catch(err){
+		reqLog(err);
+		console.log(err);
+		res.status(200).json({code :409, result: 'server-side error'});
 	}
 });
 
