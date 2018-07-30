@@ -87,6 +87,7 @@ app.post('/uploadPostDetails/:id', async (req, res) =>{
 		pst.additional_msg = req.body.additional_msg; pst.title = req.body.title;
 		pst.owner = req.body.owner;
 		pst.img_id = req.params.id;
+		pst.location_p = req.body.location;
 		await pst.save({}, (err, pts) =>{
 			if(err) console.log(err);
 			else console.log(pts);
