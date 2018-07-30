@@ -210,13 +210,16 @@ Usr.get('/:username/getContacts', async(req, res)=>{
 	try{
 		let contacts = new Set();
 		let snd = await User.findOne({'username': req.params.username});
+		console.log(snd);
 		for(let i=0;i<snd.followers.length; i++){
-			contacts.add(snd.requested[i]);
+			contacts.add(snd.followers[i]);
 		}
+		console.log(contacts);
 		for(let j=0;j<snd.following.length; j++){
 			contacts.add(snd.following[j]);
 		}
-		res.status(200).json({code: 200, result: contacts});
+		let contacts_list = Array.from(contacts);
+		res.status(200).json({code: 200, result: contacts_list});
 	}
 	catch(err){
 		reqLog(err);
