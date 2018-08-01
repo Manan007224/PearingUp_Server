@@ -141,15 +141,61 @@ Usr.get('/logout', (req, res) => {
 	req.redirect('/login');
 });
 
-Usr.get('/rateUser/rateType/sender/receiver', async(req, res)=>{
+Usr.post('/rateUser/:rateType/:sender/:receiver', async(req, res)=>{
 	try{
-
+		let snd = await User.findOne({username: req.params.sender});
+		let rcv = await User.findOne({username: req.params.receiver});
+		if(req.params.rateType == "owner"){
+			let temp = (rcv.oNumber * rcv.ownerRating) + parsefloat(req.body.rating);
+			let ntemp = rcv.oNumber + 1;
+			let new_sender = new User();
+			new_sender = rcv;
+			new_sender.oNumber = ntemp;
+			new_sender.ownerRating = temp/ntemp;
+			await User.findOneAndRemove({username: req.params.receiver});
+			await new_sender.save({}, (err, sdn) =>{
+				if(err) console.log(err);
+				else console.log(sdn);
+			});
+			res.status(200).json({code: 200, result: "Done"});
+		}	
+		else{
+			let temp = (rcv.pNumber * rcv.pickerRating) + parsefloat(req.body.rating);
+			let ntemp = rcv.pNumber + 1;
+			let new_sender = new User();
+			new_sender = rcv;
+			new_sender.pNumber = ntemp;
+			new_sender.pickerRating = temp/ntemp;
+			await User.findOneAndRemove({username: req.params.receiver});
+			await new_sender.save({}, (err, sdn) =>{
+				if(err) console.log(err);
+				else console.log(sdn);
+			});
+			res.status(200).json({code: 200, result: "Done"});
+		}
 	}
 	catch(error){
 		console.log(error);
-
+		res.status(409).json({code: 409, result: "server-side error"});
 	}
-})
+});
+
+Usr.get('/rating/:rateType/:username', async(req, res)=>{
+	try{
+		if(req.params.rateType == "owner"){
+			let usr = await User.findOne({username: req.params.username});
+			res.status(200).json({code: 200, result: usr.ownerRating});
+		}
+		else {
+			let usr = await User.findOne({username: req.params.username});
+			res.status(200).json({code: 200, result: usr.pickerRating});
+		}
+	}
+	catch(error){
+		res.status(409).json({code: 409, result: "server-side error"});
+	}
+		
+});
 
 
 Usr.post('/sentRequest/:sender/:receiver', async(req, res)=>{

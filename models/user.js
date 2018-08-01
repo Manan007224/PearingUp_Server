@@ -23,6 +23,14 @@ var userSchema = schema({
 	posted: [String],
 	saved_posts: [String],
 	ownerRating: Number,
+	oNumber: {
+		type: Number,
+		min: 0
+	},
+	pNumber: {
+		type: Number,
+		min: 0
+	},
 	pickerRating: Number
 
 });
