@@ -1,6 +1,6 @@
 # PearingUp Server
 
-Backend Code for Pearing Up IOS App
+Backend Code for Pearing Up iOS App
 
 ## Installation
 
